@@ -99,7 +99,7 @@ if (!isset($_SESSION['user_id'])) {
 							<!--end::Aside toggle-->
 							<!--begin::Logo-->
 							<a href="index.html">
-								<img alt="Logo" src="assets/images/logo.png" class="h-25px h-lg-30px d-none d-md-block" />
+								<img alt="Logo" src="assets/images/zhelixion.png" class="h-25px h-lg-30px d-none d-md-block" />
 								<img alt="Logo" src="assets/images/logo.png" class="h-25px d-block d-md-none" />
 							</a>
 							<!--end::Logo-->
@@ -128,16 +128,16 @@ if (!isset($_SESSION['user_id'])) {
 									<div class="d-flex flex-column bgi-no-repeat rounded-top" style="background-image:url('assets/media/misc/menu-header-bg.jpg')">
 										<!--begin::Title-->
 										<h3 class="text-white fw-semibold px-9 mt-10 mb-6">Notifications
-											<span class="fs-8 opacity-75 ps-3">24 reports</span>
+											<span class="fs-8 opacity-75 ps-3"></span>
 										</h3>
 										<!--end::Title-->
 										<!--begin::Tabs-->
 										<ul class="nav nav-line-tabs nav-line-tabs-2x nav-stretch fw-semibold px-9">
 											<li class="nav-item">
-												<a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_notifications_1">Alerts</a>
+												<a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_notifications_1">Request</a>
 											</li>
 											<li class="nav-item">
-												<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_notifications_2">Updates</a>
+												<a class="nav-link text-white opacity-75 opacity-state-100 pb-4 active" data-bs-toggle="tab" href="#kt_topbar_notifications_2">Report</a>
 											</li>
 											<li class="nav-item">
 												<a class="nav-link text-white opacity-75 opacity-state-100 pb-4" data-bs-toggle="tab" href="#kt_topbar_notifications_3">Logs</a>
@@ -157,169 +157,7 @@ if (!isset($_SESSION['user_id'])) {
 													<!--begin::Section-->
 													<div class="d-flex align-items-center">
 														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-primary">
-																<i class="ki-duotone ki-abstract-28 fs-2 text-primary">
-																	<span class="path1"></span>
-																	<span class="path2"></span>
-																</i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Alice</a>
-															<div class="text-gray-500 fs-7">Phase 1 development</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">1 hr</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-danger">
-																<i class="ki-duotone ki-information fs-2 text-danger">
-																	<span class="path1"></span>
-																	<span class="path2"></span>
-																	<span class="path3"></span>
-																</i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">HR Confidential</a>
-															<div class="text-gray-500 fs-7">Confidential staff documents</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">2 hrs</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-warning">
-																<i class="ki-duotone ki-briefcase fs-2 text-warning">
-																	<span class="path1"></span>
-																	<span class="path2"></span>
-																</i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Company HR</a>
-															<div class="text-gray-500 fs-7">Corporeate staff profiles</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">5 hrs</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-success">
-																<i class="ki-duotone ki-abstract-12 fs-2 text-success">
-																	<span class="path1"></span>
-																	<span class="path2"></span>
-																</i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Redux</a>
-															<div class="text-gray-500 fs-7">New frontend admin theme</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">2 days</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-primary">
-																<i class="ki-duotone ki-colors-square fs-2 text-primary">
-																	<span class="path1"></span>
-																	<span class="path2"></span>
-																	<span class="path3"></span>
-																	<span class="path4"></span>
-																</i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Project Breafing</a>
-															<div class="text-gray-500 fs-7">Product launch status update</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">21 Jan</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
-															<span class="symbol-label bg-light-info">
-																<i class="ki-duotone ki-picture fs-2 text-info"></i>
-															</span>
-														</div>
-														<!--end::Symbol-->
-														<!--begin::Title-->
-														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Banner Assets</a>
-															<div class="text-gray-500 fs-7">Collection of banner images</div>
-														</div>
-														<!--end::Title-->
-													</div>
-													<!--end::Section-->
-													<!--begin::Label-->
-													<span class="badge badge-light fs-8">21 Jan</span>
-													<!--end::Label-->
-												</div>
-												<!--end::Item-->
-												<!--begin::Item-->
-												<div class="d-flex flex-stack py-4">
-													<!--begin::Section-->
-													<div class="d-flex align-items-center">
-														<!--begin::Symbol-->
-														<div class="symbol symbol-35px me-4">
+														<!-- <div class="symbol symbol-35px me-4">
 															<span class="symbol-label bg-light-warning">
 																<i class="ki-duotone ki-color-swatch fs-2 text-warning">
 																	<span class="path1"></span>
@@ -345,12 +183,12 @@ if (!isset($_SESSION['user_id'])) {
 																	<span class="path21"></span>
 																</i>
 															</span>
-														</div>
+														</div> -->
 														<!--end::Symbol-->
 														<!--begin::Title-->
 														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Icon Assets</a>
-															<div class="text-gray-500 fs-7">Collection of SVG icons</div>
+															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Request of TOR</a>
+															<div class="text-gray-500 fs-7">Matthew Boquiren</div>
 														</div>
 														<!--end::Title-->
 													</div>
@@ -376,29 +214,31 @@ if (!isset($_SESSION['user_id'])) {
 										<!--begin::Tab panel-->
 										<div class="tab-pane fade show active" id="kt_topbar_notifications_2" role="tabpanel">
 											<!--begin::Wrapper-->
-											<div class="d-flex flex-column px-9">
+											<!-- <div class="d-flex flex-column px-9"> -->
+											<div class="scroll-y mh-325px my-5 px-8">
 												<!--begin::Section-->
-												<div class="pt-10 pb-0">
-													<!--begin::Title-->
-													<h3 class="text-gray-900 text-center fw-bold">Get Pro Access</h3>
-													<!--end::Title-->
-													<!--begin::Text-->
-													<div class="text-center text-gray-600 fw-semibold pt-1">Outlines keep you honest. They stoping you from amazing poorly about drive</div>
-													<!--end::Text-->
-													<!--begin::Action-->
-													<div class="text-center mt-5 mb-9">
-														<a href="#" class="btn btn-sm btn-primary px-6" data-bs-toggle="modal" data-bs-target="#kt_modal_upgrade_plan">Upgrade</a>
+												<!-- <div class="pt-10 pb-0"> -->
+												<div class="d-flex flex-stack py-4">
+													<div class="d-flex align-items-center">
+														<div class="mb-0 me-2">
+															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Harassment</a>
+															<div class="text-gray-500 fs-7">Matthew Boquiren</div>
+														</div>
 													</div>
-													<!--end::Action-->
+													<span class="badge badge-light fs-8">20 March</span>
 												</div>
 												<!--end::Section-->
-												<!--begin::Illustration-->
-												<div class="text-center px-4">
-													<img class="mw-100 mh-200px" alt="image" src="assets/media/illustrations/sigma-1/1.png" />
-												</div>
-												<!--end::Illustration-->
 											</div>
 											<!--end::Wrapper-->
+											<!--begin::View more-->
+											<div class="py-3 text-center border-top">
+												<a href="pages/user-profile/activity.html" class="btn btn-color-gray-600 btn-active-color-primary">View All
+													<i class="ki-duotone ki-arrow-right fs-5">
+														<span class="path1"></span>
+														<span class="path2"></span>
+													</i></a>
+											</div>
+											<!--end::View more-->
 										</div>
 										<!--end::Tab panel-->
 										<!--begin::Tab panel-->
