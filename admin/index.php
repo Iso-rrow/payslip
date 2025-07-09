@@ -795,7 +795,7 @@ if (!isset($_SESSION['user_id'])) {
 									<!--end::Menu item-->
 									<!--begin::Menu item-->
 									<div class="menu-item px-5">
-										<a href="/h_r_3/authentication/logout.php" class="menu-link px-5">Sign Out</a>
+										<a href="/payslip/authentication/logout.php" class="menu-link px-5">Sign Out</a>
 									</div>
 									<!--end::Menu item-->
 								</div>

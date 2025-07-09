@@ -1,12 +1,11 @@
 <?php
-// login.php
 
-
+session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 error_log("Session: " . print_r($_SESSION, true));
 
-session_start();
+
 
 header('Content-Type: application/json');
 
@@ -43,7 +42,7 @@ if ($result && $user = $result->fetch_assoc()) {
         $_SESSION['user_name']  = $user['name'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_role']  = $user['role'];
-        $_SESSION['employee_name'] = $user['name'];
+        
         // If you want to force a password change, check here
         if ($user['must_change_password']) {
             echo json_encode(['success' => true, 'must_change_password' => true]);
