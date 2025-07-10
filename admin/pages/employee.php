@@ -294,7 +294,11 @@ $pages = "Employee Management";
                             data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
                         <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
                         <div class="symbol symbol-25px ms-5">
-                            <img alt="Logo" src="assets/images/profile.png" />
+                            <img src="
+                                <?php
+                                    echo htmlspecialchars($_SESSION["img_name"]);
+                                ?>
+                            "/>
                         </div>
                         <!------------------------------------------------End of Employee profile-------------------------------------------------->
                     </div>
@@ -332,9 +336,6 @@ $pages = "Employee Management";
             <input type="file" name="employee_image" id="employee_image_input" 
                     class="form-control mt-2" accept="image/*">
             </div>
-
-
-
           <!-- Personal Info -->
           <div class="col-md-6">
             <label class="form-label">First Name</label>

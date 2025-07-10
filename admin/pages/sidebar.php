@@ -206,7 +206,7 @@
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
 								<!--begin:All Employees-->
-								<a class="menu-link" href="#">
+								<a class="menu-link" href="admin?pages=request">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
@@ -340,14 +340,14 @@
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
-									<span class="menu-title">Department</span>
+									<span class="menu-title">Add New</span>
 								</a>
-								<a class="menu-link" href="">
+								<!-- <a class="menu-link" href="">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
 									<span class="menu-title">Roles</span>
-								</a>
+								</a> -->
 							</div>
 						</div>
 					</div>
@@ -500,7 +500,7 @@
 						<!--end::Menu item-->
 						<!--begin::Menu item-->
 						<div class="menu-item px-5">
-							<a href="/h_r_3/authentication/logout.php" class="menu-link px-5">Sign Out</a>
+							<a href="/payslip/authentication/logout.php" class="menu-link px-5">Sign Out</a>
 						</div>
 						<!--end::Menu item-->
 					</div>

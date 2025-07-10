@@ -122,7 +122,7 @@ if (!empty($_FILES['img_name']['name'])) {
     $targetFile = $uploadDir . $uniqueFileName;
 
     if (move_uploaded_file($_FILES['img_name']['tmp_name'], $targetFile)) {
-        $img_name = str_replace('../../', '/h_r_3/', $targetFile);
+        $img_name = str_replace('../../', '/payslip/', $targetFile);
     }
 }
 

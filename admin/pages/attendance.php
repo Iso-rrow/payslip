@@ -27,41 +27,67 @@ $result = $stmt->get_result();
 <h2>Attendance</h2>
 <p>Attendance Table for <?php echo date('F d, Y'); ?></p>
 
-<table id="attendanceTable" class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Employee Name</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-            <th>Total Time</th>
-            <th>Date</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if ($result && $result->num_rows > 0): ?>
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <tr>
-                    <td><?= htmlspecialchars($row['name']) ?></td>
-                    <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '' ?></td>
-                    <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '' ?></td>
-                    <td><?= $row['total_time'] ?? '—' ?></td>
-                    <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
-                    <td>
-                        <button class="btn btn-sm btn-info payslip-btn" data-id="<?= $row['id'] ?>" data-employee="<?= $row['employee_id'] ?>">Payslip</button>
-                        <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $row['id'] ?>">Edit</button>
-                        <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $row['id'] ?>">Delete</button>
-                    </td>
+<!-- begin: TABLE -->
+ <div class="container-fluid">
+    <table id="kt_datatable_example_1" class="table table-sm  table-row-dashed fs-7 gy-3">
+        <thead>
+            <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
+                <th class="w-10px pe-2">
+                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                        <input class="form-check-input" type="checkbox" data-kt-check="true"
+                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                    </div>
+                </th>
+                <th>Employee Name</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Total Time</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody class="text-gray-600 fw-semibold">
+            <tr class="text-start text-center fs-7 gs-0 my-2">
+                <th class="w-10px pe-2">
+                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                        <input class="form-check-input" type="checkbox" data-kt-check="true"
+                            data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
+                        <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
+                        <div class="symbol symbol-25px ms-5">
+                            <img src="
+                                <?php
+                                    echo htmlspecialchars($_SESSION["img_name"]);
+                                ?>
+                            "/>
+                        </div>
+                        <?php if ($result && $result->num_rows > 0): ?>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($row['name']) ?></td>
+                                    <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '' ?></td>
+                                    <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '' ?></td>
+                                    <td><?= $row['total_time'] ?? '—' ?></td>
+                                    <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-info payslip-btn" data-id="<?= $row['id'] ?>" data-employee="<?= $row['employee_id'] ?>">Payslip</button>
+                                        <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $row['id'] ?>">Edit</button>
+                                        <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $row['id'] ?>">Delete</button>
+                                    </td>
 
-                </tr>
-            <?php endwhile; ?>
-        <?php else: ?>
-            
-        <?php endif; ?>
-    </tbody>
-</table>
+                                </tr>
+                                <?php endwhile; ?>
+                            <?php else: ?>
+                        <?php endif; ?>
+                        <!------------------------------------------------End of Employee profile-------------------------------------------------->
+                    </div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- end: TABLE -->
 
- <!-- Edit Modal -->
+<!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">

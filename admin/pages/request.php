@@ -1,5 +1,5 @@
 <?php
-$pages = "Department";
+$pages = "File Request";
 
 ?>
 <!-- Toolbar Header -->
@@ -30,18 +30,14 @@ $pages = "Department";
                 <i class="ki-duotone ki-filter fs-6"><span class="path1"></span><span class="path2"></span></i>
                 Filter
             </button>
-            <button type="button" class="btn btn-primary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" title="Add New Department">
-                <i class="ki-duotone ki-plus-circle fs-6"><span class="path1"></span><span class="path2"></span></i>
-                Add Department
-            </button>
             <!--///////////////////// Add Customer Button/////////////////////
             ///////////////////////////////////////////////////////////// -->   
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" title="Add New Role">
+            <!-- <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" title="Add New Role">
                 <i class="ki-duotone ki-plus-circle fs-6">
                     <span class="path1"></span>
                     <span class="path2"></span>
                 </i> Add Role
-            </button>
+            </button> -->
         </div>
     </div>
 </div>
@@ -70,8 +66,11 @@ $pages = "Department";
                             data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                     </div>
                 </th>
+                <th>Auto ID</th>
+                <th>Name</th>
+                <th>Subject</th>
                 <th>Department</th>
-                <th>Roles</th>
+                <th>Role</th>
             </tr>
         </thead>
         <tbody class="text-gray-600 fw-semibold">
@@ -82,6 +81,9 @@ $pages = "Department";
                             data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
                             
                         <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
+                        <th>Auto ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
                         <th>Department</th>
                         <th>Role</th>
                         <!------------------------------------------------End of Employee profile-------------------------------------------------->
