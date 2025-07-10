@@ -776,7 +776,7 @@ if (!isset($_SESSION['user_id'])) {
 							if (isset($_GET['page'])) {
 								$page = $_GET['page'];
 								$file = 'pages/' . $page . '.php';
-
+										
 								// Optional: Check if the file exists before including
 								if (file_exists($file)) {
 									include $file;
