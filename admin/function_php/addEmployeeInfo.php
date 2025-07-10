@@ -32,6 +32,8 @@ $contact_number    = htmlspecialchars(trim($_POST['contact_number'] ?? ''));
 $department        = htmlspecialchars(trim($_POST['department'] ?? ''));
 $position          = htmlspecialchars(trim($_POST['position'] ?? ''));
 $hire_date         = htmlspecialchars(trim($_POST['hire_date'] ?? ''));
+$scheduled_time_in  = htmlspecialchars(trim($_POST['scheduled_time_in'] ?? ''));
+$scheduled_time_out = htmlspecialchars(trim($_POST['scheduled_time_out'] ?? ''));
 $sss_number        = htmlspecialchars(trim($_POST['sss_number'] ?? ''));
 $philhealth_number = htmlspecialchars(trim($_POST['philhealth_number'] ?? ''));
 $pagibig_number    = htmlspecialchars(trim($_POST['pagibig_number'] ?? ''));
@@ -144,7 +146,7 @@ if (!empty($_FILES['documents']['name'][0])) {
         $targetFile = $uploadDir . time() . '_' . $fileName;
 
         if (move_uploaded_file($tmp_name, $targetFile)) {
-            $fileNames[] = str_replace('../../', '/h_r_3/', $targetFile);
+            $fileNames[] = str_replace('../../', '/payslip/', $targetFile);
             
         }
     }
@@ -163,7 +165,7 @@ function uploadSingleFile($fileField, $uploadDir = '../../uploads/documents/') {
         $targetFile = $uploadDir . $uniqueFileName;
 
         if (move_uploaded_file($_FILES[$fileField]['tmp_name'], $targetFile)) {
-            return str_replace('../../', '/h_r_3/', $targetFile);
+            return str_replace('../../', '/payslip/', $targetFile);
         }
     }
     return null;
@@ -186,16 +188,18 @@ try {
     $stmt1 = $conn->prepare("
     INSERT INTO employees (
         auto_employee_id, img_name, first_name, last_name, email, contact_number, department, position, hire_date,
+        scheduled_time_in, scheduled_time_out,
         sss_number, philhealth_number, pagibig_number, tin_number, salary_rate,
         payment_method, bank_name, bank_account, address, emergency_name, emergency_phone,
-        civil_status, sex, citizenship, height, weight, religion, documents, sss_file, philhealth_file, pagibig_file, drugtest_file, nbi_file, medical_file
-
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,? ,? ,? ,? ,?)
+        civil_status, sex, citizenship, height, weight, religion, documents, 
+        sss_file, philhealth_file, pagibig_file, drugtest_file, nbi_file, medical_file
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
 
-   $stmt1->bind_param(
-    "ssssssssssssssdssssssssddssssssss",
+
+  $stmt1->bind_param(
+    "ssssssssssssdssssssssddssssssss",
     $auto_employee_id,
     $img_name,
     $first_name,
@@ -205,11 +209,13 @@ try {
     $department,
     $position,
     $hire_date,
+    $scheduled_time_in,
+    $scheduled_time_out,
     $sss_number,
     $philhealth_number,
     $pagibig_number,
     $tin_number,
-    $salary_rate,    
+    $salary_rate,
     $payment_method,
     $bank_name,
     $bank_account,
@@ -219,8 +225,8 @@ try {
     $civil_status,
     $sex,
     $citizenship,
-    $height,         
-    $weight,          
+    $height,
+    $weight,
     $religion,
     $documents,
     $sss_file,
@@ -230,6 +236,7 @@ try {
     $nbi_file,
     $medical_file
 );
+
 
 
 

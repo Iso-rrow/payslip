@@ -7,7 +7,7 @@ document.querySelector('#addEmployeeForm').addEventListener('submit', function(e
     submitBtn.disabled = true;
     submitBtn.innerText = 'Saving...';
 
-    fetch('/h_r_3/admin/function_php/addEmployeeInfo.php', {
+    fetch('/payslip/admin/function_php/addEmployeeInfo.php', {
         method: 'POST',
         body: formData,
     })

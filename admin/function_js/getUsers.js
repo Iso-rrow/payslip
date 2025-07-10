@@ -18,7 +18,7 @@ var UserDatatableServerSide = (function () {
         className: "row-selected",
       },
       ajax: {
-        url: "/h_r_3/admin/function_php/getUsers.php",
+        url: "/payslip/admin/function_php/getUsers.php",
         type: "POST",
         dataSrc: "data",
       },
@@ -101,7 +101,7 @@ var UserDatatableServerSide = (function () {
           },
         }).then(function (result) {
           if (result.value) {
-            fetch(`/h_r_3/admin/function_php/deleteUser.php?id=${id}`, {
+            fetch(`/payslip/admin/function_php/deleteUser.php?id=${id}`, {
               method: "POST",
             })
               .then((res) => res.json())
@@ -126,7 +126,7 @@ var UserDatatableServerSide = (function () {
         e.preventDefault();
         const id = this.getAttribute("data-id");
 
-        fetch(`/h_r_3/admin/function_php/editUsers.php?id=${id}`)
+        fetch(`/payslip/admin/function_php/editUsers.php?id=${id}`)
           .then((res) => res.json())
           .then((data) => {
             if (data.error) {
@@ -159,7 +159,7 @@ var UserDatatableServerSide = (function () {
         e.preventDefault();
 
         const formData = new FormData(form);
-        fetch("/h_r_3/admin/function_php/updateUsers.php", {
+        fetch("/payslip/admin/function_php/updateUsers.php", {
           method: "POST",
           body: formData,
         })

@@ -15,12 +15,12 @@ if ($action === 'in') {
     $stmt->execute();
 
     // Get employee name (assumes you have an 'employees' table)
-    $nameStmt = $conn->prepare("SELECT name FROM employees WHERE id = ?");
+    $nameStmt = $conn->prepare("SELECT first_name, last_name FROM employees WHERE employee_id = ?");
     $nameStmt->bind_param("i", $employee_id);
     $nameStmt->execute();
     $nameResult = $nameStmt->get_result();
     $employee = $nameResult->fetch_assoc();
-    $employeeName = $employee['name'];
+    $employeeName = $employee['first_name'] . ' ' . $employee['last_name'];
 
     // Insert into attendance table
     $insertAttendance = $conn->prepare("INSERT INTO attendance (employee_id, name, time_in, date) VALUES (?, ?, NOW(), CURDATE())");

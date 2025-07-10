@@ -1,8 +1,11 @@
 <?php
 include __DIR__ . '/../../database/connect.php';
 $pages = "Attendance";
+$fromDate = $_GET['from_date'] ?? null;
+$toDate = $_GET['to_date'] ?? null;
+$params = [];
+$conditions = [];
 
-$dateToday = date('Y-m-d');
 $query = "
     SELECT
         t.id,
@@ -12,80 +15,120 @@ $query = "
         t.time_out,
         TIMEDIFF(t.time_out, t.time_in) AS total_time,
         t.date,
-        e.salary_rate
+        e.salary_rate,
+        e.img_name
     FROM time_logs t
     JOIN employees e ON t.employee_id = e.employee_id
-    WHERE t.date = ?
 ";
 
+// Add date condition if filter is used
+if ($fromDate && $toDate) {
+    $conditions[] = "DATE(t.date) BETWEEN ? AND ?";
+    $params[] = $fromDate;
+    $params[] = $toDate;
+}
+
+// Append WHERE clause if needed
+if (!empty($conditions)) {
+    $query .= " WHERE " . implode(' AND ', $conditions);
+}
+
 $stmt = $conn->prepare($query);
-$stmt->bind_param("s", $dateToday);
+
+// Bind parameters if any
+if (!empty($params)) {
+    $types = str_repeat('s', count($params)); // all are strings (dates)
+    $stmt->bind_param($types, ...$params);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
+
+
+// Group data by date
+$groupedData = [];
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $groupedData[$row['date']][] = $row;
+    }
+}
 ?>
 
 <h2>Attendance</h2>
-<p>Attendance Table for <?php echo date('F d, Y'); ?></p>
 
-<!-- begin: TABLE -->
- <div class="container-fluid">
-    <table id="kt_datatable_example_1" class="table table-sm  table-row-dashed fs-7 gy-3">
-        <thead>
-            <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
-                <th class="w-10px pe-2">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
-                    </div>
-                </th>
-                <th>Employee Name</th>
-                <th>Time In</th>
-                <th>Time Out</th>
-                <th>Total Time</th>
-                <th>Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody class="text-gray-600 fw-semibold">
-            <tr class="text-start text-center fs-7 gs-0 my-2">
-                <th class="w-10px pe-2">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
-                        <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
-                        <div class="symbol symbol-25px ms-5">
-                            <img src="
-                                <?php
-                                    echo htmlspecialchars($_SESSION["img_name"]);
-                                ?>
-                            "/>
-                        </div>
-                        <?php if ($result && $result->num_rows > 0): ?>
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($row['name']) ?></td>
-                                    <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '' ?></td>
-                                    <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '' ?></td>
-                                    <td><?= $row['total_time'] ?? '—' ?></td>
-                                    <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-info payslip-btn" data-id="<?= $row['id'] ?>" data-employee="<?= $row['employee_id'] ?>">Payslip</button>
-                                        <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $row['id'] ?>">Edit</button>
-                                        <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $row['id'] ?>">Delete</button>
-                                    </td>
+<!-- Filter Form -->
+<div class="card p-4 mb-4">
+<form class="row g-3 align-items-end" method="GET" action="?">
+    <input type="hidden" name="pages" value="attendance">
 
-                                </tr>
-                                <?php endwhile; ?>
-                            <?php else: ?>
-                        <?php endif; ?>
-                        <!------------------------------------------------End of Employee profile-------------------------------------------------->
-                    </div>
-                </th>
-            </tr>
-        </tbody>
-    </table>
+    <div class="col-md-3">
+        <label for="fromDate" class="form-label">From Date</label>
+        <input type="date" id="fromDate" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
+    </div>
+    <div class="col-md-3">
+        <label for="toDate" class="form-label">To Date</label>
+        <input type="date" id="toDate" name="to_date" class="form-control" value="<?= $_GET['to_date'] ?? '' ?>">
+    </div>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+    </div>
+</form>
 </div>
-<!-- end: TABLE -->
+
+<!-- Attendance Tables Grouped by Date -->
+<?php if (!empty($groupedData)): ?>
+    <?php foreach ($groupedData as $date => $records): ?>
+        <div class="card mb-5">
+            <div class="card-header  bg-light mt-3">
+                <h5 class="mb-0">Attendance Table for <?= date('F d, Y', strtotime($date)) ?></h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm table-bordered text-center m-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>Profile</th>
+                            <th>Employee Name</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Total Time</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($records as $row): ?>
+                            <tr>
+                                <td>
+                                    <div class="symbol symbol-25px mt-1">
+                                        <img src="<?= htmlspecialchars($row['img_name'] ?? '/payslip/uploads/employees/default.jpg') ?>"
+                                            alt="Profile" class="rounded-circle"
+                                            style="width: 25px; height: 25px; object-fit: cover;">
+                                    </div>
+                                </td>
+                                <td><?= htmlspecialchars($row['name']) ?></td>
+                                <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '' ?></td>
+                                <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '' ?></td>
+                                <td><?= $row['total_time'] ?? '—' ?></td>
+                                <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
+                                <td>
+                                    <button class="btn btn-sm btn-info payslip-btn"
+                                            data-id="<?= $row['id'] ?>"
+                                            data-employee="<?= $row['employee_id'] ?>">Payslip</button>
+                                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $row['id'] ?>">Edit</button>
+                                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $row['id'] ?>">Delete</button>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p class="text-center text-muted">No attendance records found.</p>
+<?php endif; ?>
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
@@ -94,7 +137,7 @@ $result = $stmt->get_result();
       <form id="editForm">
         <div class="modal-header">
           <h5 class="modal-title">Edit Attendance</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           <input type="hidden" name="id" id="edit-id">
@@ -121,7 +164,7 @@ $result = $stmt->get_result();
     <form id="payslipForm" class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Generate Payslip</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <input type="hidden" name="employee_id" id="payslip-employee-id">
@@ -141,85 +184,57 @@ $result = $stmt->get_result();
   </div>
 </div>
 
-       
-
-
-
-
+<!-- JS Section -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
 <script>
-    // $(document).ready(function() {
-    //     $('#attendanceTable').DataTable();
-    // });
- 
-    // setInterval(() => {
-    //     location.reload();
-    // }, 10000);
-
-    $(document).on('click', '.payslip-btn', function () {
-  const employeeId = $(this).data('employee');
-  $('#payslip-employee-id').val(employeeId);
-
-  // Bootstrap 5 Modal
-  const payslipModal = new bootstrap.Modal(document.getElementById('payslipModal'));
-  payslipModal.show();
+$(document).on('click', '.payslip-btn', function () {
+    const employeeId = $(this).data('employee');
+    $('#payslip-employee-id').val(employeeId);
+    const payslipModal = new bootstrap.Modal(document.getElementById('payslipModal'));
+    payslipModal.show();
 });
 
 $('#payslipForm').on('submit', function (e) {
-  e.preventDefault();
-  const employeeId = $('#payslip-employee-id').val();
-  const startDate = $(this).find('[name="start_date"]').val();
-  const endDate = $(this).find('[name="end_date"]').val();
-
-  const url = `admin/function_php/generate_payslip.php?employee_id=${employeeId}&start_date=${startDate}&end_date=${endDate}`;
-  window.open(url, '_blank');
+    e.preventDefault();
+    const employeeId = $('#payslip-employee-id').val();
+    const startDate = $(this).find('[name="start_date"]').val();
+    const endDate = $(this).find('[name="end_date"]').val();
+    const url = `admin/function_php/generate_payslip.php?employee_id=${employeeId}&start_date=${startDate}&end_date=${endDate}`;
+    window.open(url, '_blank');
 });
 
-
-
-    $(document).ready(function () {
-  $('#attendanceTable').DataTable();
-
-    // Edit
-  $(document).on('click', '.edit-btn', function () {
+$(document).on('click', '.edit-btn', function () {
     const id = $(this).data('id');
     $('#edit-id').val(id);
-    
-
     $('#editModal').modal('show');
-  });
+});
 
- 
-  $('#editForm').on('submit', function (e) {
+$('#editForm').on('submit', function (e) {
     e.preventDefault();
     $.ajax({
-      url: 'admin/function_php/update_attendance.php',
-      method: 'POST',
-      data: $(this).serialize(),
-      success: function (response) {
-        alert(response);
-        location.reload();
-      }
+        url: 'admin/function_php/update_attendance.php',
+        method: 'POST',
+        data: $(this).serialize(),
+        success: function (response) {
+            alert(response);
+            location.reload();
+        }
     });
-  });
+});
 
-  // Delete 
-  $(document).on('click', '.delete-btn', function () {
+$(document).on('click', '.delete-btn', function () {
     if (!confirm("Are you sure you want to delete this record?")) return;
-
     const id = $(this).data('id');
     $.ajax({
-      url: 'admin/function_php/delete_attendance.php',
-      method: 'POST',
-      data: { id: id },
-      success: function (response) {
-        alert(response);
-        location.reload();
-      }
+        url: 'admin/function_php/delete_attendance.php',
+        method: 'POST',
+        data: { id: id },
+        success: function (response) {
+            alert(response);
+            location.reload();
+        }
     });
-  });
 });
 </script>

@@ -6,35 +6,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $documents = '';
     $imageFileName = null;
 
-   // Handle image upload or keep existing image
-if (!empty($_FILES['employee_image']['name'])) {
-    $uploadImageDir = '../../uploads/employees/';
-    if (!is_dir($uploadImageDir)) {
-        mkdir($uploadImageDir, 0777, true);
+    // Validate employee_id
+    if (empty($data['employee_id'])) {
+        echo json_encode(['success' => false, 'message' => 'Missing employee_id']);
+        exit;
     }
 
-    $originalImageName = basename($_FILES['employee_image']['name']);
-    $uniqueImageName = time() . '_' . $originalImageName;
-    $targetImagePath = $uploadImageDir . $uniqueImageName;
+    // Handle image upload
+    if (!empty($_FILES['employee_image']['name'])) {
+        $uploadImageDir = '../../uploads/employees/';
+        if (!is_dir($uploadImageDir)) {
+            mkdir($uploadImageDir, 0777, true);
+        }
 
-    if (move_uploaded_file($_FILES['employee_image']['tmp_name'], $targetImagePath)) {
-        $imageFileName = '/h_r_3/uploads/employees/' . $uniqueImageName;
+        $originalImageName = basename($_FILES['employee_image']['name']);
+        $uniqueImageName = time() . '_' . $originalImageName;
+        $targetImagePath = $uploadImageDir . $uniqueImageName;
 
-        
-        if (!empty($_POST['existing_image_name']) && $_POST['existing_image_name'] !== 'default.jpg') {
-            $oldImagePath = '../../uploads/employees/' . basename($_POST['existing_image_name']);
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+        if (move_uploaded_file($_FILES['employee_image']['tmp_name'], $targetImagePath)) {
+            $imageFileName = '/payslip/uploads/employees/' . $uniqueImageName;
+
+            if (!empty($_POST['existing_image_name']) && $_POST['existing_image_name'] !== 'default.jpg') {
+                $oldImagePath = '../../uploads/employees/' . basename($_POST['existing_image_name']);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
         }
+    } else {
+        $imageFileName = $_POST['existing_image_name'] ?? 'default.jpg';
     }
-} else {
-    
-    $imageFileName = $_POST['existing_image_name'] ?? 'default.jpg';
-}
 
-
-    // Handle documents
+    // Handle documents upload
     if (!empty($_FILES['documents']['name'][0])) {
         $uploadDocDir = '../../uploads/documents/';
         if (!is_dir($uploadDocDir)) {
@@ -42,7 +45,6 @@ if (!empty($_FILES['employee_image']['name'])) {
         }
 
         $fileNames = [];
-
         foreach ($_FILES['documents']['tmp_name'] as $key => $tmp_name) {
             if (!empty($_FILES['documents']['name'][$key])) {
                 $originalDocName = basename($_FILES['documents']['name'][$key]);
@@ -50,15 +52,18 @@ if (!empty($_FILES['employee_image']['name'])) {
                 $targetDocPath = $uploadDocDir . $uniqueDocName;
 
                 if (move_uploaded_file($tmp_name, $targetDocPath)) {
-                    $fileNames[] = '/h_r_3/uploads/documents/' . $uniqueDocName;
+                    $fileNames[] = '/payslip/uploads/documents/' . $uniqueDocName;
                 }
             }
         }
-
         $documents = implode(',', $fileNames);
     }
 
-    // Base query
+    // Normalize time
+    $scheduled_time_in = !empty($data['scheduled_time_in']) ? date('H:i:s', strtotime($data['scheduled_time_in'])) : null;
+    $scheduled_time_out = !empty($data['scheduled_time_out']) ? date('H:i:s', strtotime($data['scheduled_time_out'])) : null;
+
+    // Query
     $query = "UPDATE employees SET 
         first_name = ?, 
         last_name = ?, 
@@ -67,6 +72,8 @@ if (!empty($_FILES['employee_image']['name'])) {
         department = ?, 
         position = ?, 
         hire_date = ?, 
+        scheduled_time_in = ?, 
+        scheduled_time_out = ?, 
         sss_number = ?, 
         philhealth_number = ?, 
         pagibig_number = ?, 
@@ -79,11 +86,11 @@ if (!empty($_FILES['employee_image']['name'])) {
         civil_status = ?, 
         sex = ?, 
         citizenship = ?, 
+        religion = ?, 
         height = ?, 
-        weight = ?, 
-        religion = ?";
+        weight = ?";
 
-    $types = "sssssssssssdsssssssiis"; // add more below if needed
+    $types = "ssssssssssssssssssssssdd";
     $params = [
         $data['first_name'],
         $data['last_name'],
@@ -92,11 +99,13 @@ if (!empty($_FILES['employee_image']['name'])) {
         $data['department'],
         $data['position'],
         $data['hire_date'],
+        $scheduled_time_in,
+        $scheduled_time_out,
         $data['sss_number'],
         $data['philhealth_number'],
         $data['pagibig_number'],
         $data['tin_number'],
-        $data['salary_rate'],
+        (float) $data['salary_rate'],
         $data['payment_method'],
         $data['address'],
         $data['emergency_name'],
@@ -104,11 +113,12 @@ if (!empty($_FILES['employee_image']['name'])) {
         $data['civil_status'],
         $data['sex'],
         $data['citizenship'],
-        $data['height'],
-        $data['weight'],
-        $data['religion']
+        $data['religion'],
+        (float) $data['height'],
+        (float) $data['weight']
     ];
 
+    // Optional values
     if ($imageFileName !== null) {
         $query .= ", img_name = ?";
         $types .= "s";
@@ -121,18 +131,23 @@ if (!empty($_FILES['employee_image']['name'])) {
         $params[] = $documents;
     }
 
+    // Finalize
     $query .= " WHERE employee_id = ?";
     $types .= "i";
-    $params[] = $data['employee_id'];
+    $params[] = (int) $data['employee_id'];
 
-    // Prepare statement
+    // DEBUG
+    // error_log("QUERY: $query");
+    // error_log("TYPES: $types");
+    // error_log("PARAMS: " . print_r($params, true));
+
+    // Execute
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);
         exit;
     }
 
-    // Bind dynamically
     $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {

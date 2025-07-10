@@ -19,10 +19,10 @@ if ($row = $result->fetch_assoc()) {
     if (!empty($row['img_name'])) {
         
         if (!str_contains($row['img_name'], '/uploads/employees/')) {
-            $row['img_name'] = '/h_r_3/uploads/employees/' . $row['img_name'];
+            $row['img_name'] = '/payslip/uploads/employees/' . $row['img_name'];
         }
     } else {
-        $row['img_name'] = '/h_r_3/uploads/employees/default.jpg';
+        $row['img_name'] = '/payslip/uploads/employees/default.jpg';
     }
 
     echo json_encode([

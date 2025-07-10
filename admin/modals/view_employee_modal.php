@@ -11,8 +11,8 @@
       <div class="modal-body row g-3">
         
         <div class="d-flex justify-content-center mb-4">
-          <img id="view_employee_img" src="/h_r_3/uploads/employees/default.jpg" alt="Employee Picture"
-            onerror="this.src='/h_r_3/uploads/employees/default.jpg'"
+          <img id="view_employee_img" src="/payslip/uploads/employees/default.jpg" alt="Employee Picture"
+            onerror="this.src='/payslip/uploads/employees/default.jpg'"
             style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #dee2e6;">
         </div>
 
@@ -72,6 +72,14 @@
         <div class="col-md-6">
           <label class="form-label">Date Hired</label>
           <input type="text" class="form-control" id="view_hire_date" disabled>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Scheduled Time In</label>
+          <input type="text" class="form-control" id="view_scheduled_time_in" disabled>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Scheduled Time Out</label>
+          <input type="text" class="form-control" id="view_scheduled_time_out" disabled>
         </div>
         <div class="col-md-6">
           <label class="form-label">SSS Number</label>

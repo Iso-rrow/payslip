@@ -768,6 +768,7 @@ if (!isset($_SESSION['user_id'])) {
 						<!--end::Container-->
 					</div>
 				</div>
+				
 				<!--end::Content-->
 				<!-- begin::Footer-->
 				<!-- <div class="footer py-4 d-flex flex-sm-column" id="kt_footer"> -->

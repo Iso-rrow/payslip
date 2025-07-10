@@ -142,7 +142,14 @@ $pages = "Employee Management";
                             <label class="form-label">Date Hired</label>
                             <input type="date" name="hire_date" class="form-control" required>
                         </div>
-
+                        <div class="col-md-6">
+                                <label class="form-label">Scheduled Time In</label>
+                                <input type="time" name="scheduled_time_in" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Scheduled Time Out</label>
+                                <input type="time" name="scheduled_time_out" class="form-control" required>
+                        </div>
                         <!--/////////////////////Government IDs/////////////////////
                             ///////////////////////////////////////////////////////-->
                         <div class="col-md-6">
@@ -161,7 +168,7 @@ $pages = "Employee Management";
                             <label class="form-label">TIN</label>
                             <input name="tin_number" class="form-control" required>
                         </div>
-
+    
                         <!--/////////////////////Payroll Info/////////////////////
                             /////////////////////////////////////////////////////-->
                         <div class="col-md-6">
@@ -294,12 +301,12 @@ $pages = "Employee Management";
                             data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
                         <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
                         <div class="symbol symbol-25px ms-5">
-                            <img src="
-                                <?php
-                                    echo htmlspecialchars($_SESSION["img_name"]);
-                                ?>
-                            "/>
-                        </div>
+                            <?php if (isset($_SESSION['img_name'])): ?>
+                                <img src="<?php echo htmlspecialchars($_SESSION['img_name']); ?>" alt="Employee Image" class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
+                            <?php else: ?>
+                                <img src="/payslip/uploads/employees/default.jpg" alt="Default Image" class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
+                            <?php endif; ?>
+                            </div>
                         <!------------------------------------------------End of Employee profile-------------------------------------------------->
                     </div>
                 </th>
@@ -326,7 +333,7 @@ $pages = "Employee Management";
 
             <!-- Profile Image -->
             <div class="text-center mb-4">
-            <img id="edit_employee_img" src="/h_r_3/uploads/employees/default.jpg"
+            <img id="edit_employee_img" src="/payslip/uploads/employees/default.jpg"
                 class="rounded-circle border" 
                 style="width: 130px; height: 130px; object-fit: cover;"
                 alt="Employee Image">
@@ -400,7 +407,15 @@ $pages = "Employee Management";
             <label class="form-label">Date Hired</label>
             <input type="date" class="form-control" id="edit_hire_date" name="hire_date">
           </div>
-
+          <div class="col-md-6">
+            <label class="form-label">Scheduled Time In</label>
+            <input type="time" class="form-control" id="edit_scheduled_time_in" name="scheduled_time_in">
+            </div>
+            <div class="col-md-6">
+            <label class="form-label">Scheduled Time Out</label>
+            <input type="time" class="form-control" id="edit_scheduled_time_out" name="scheduled_time_out">
+            </div>
+                      
           <!-- Government IDs -->
           <div class="col-md-6">
             <label class="form-label">SSS Number</label>
@@ -637,8 +652,8 @@ $pages = "Employee Management";
 
 <!--/////////////////////Scripts/////////////////////
     ////////////////////////////////////////////////-->
-<script src="/h_r_3/admin/function_js/addEmployeeInfo.js"></script>
-<script src="/h_r_3/admin/function_js/getEmployee.js"></script>
+<script src="/payslip/admin/function_js/addEmployeeInfo.js"></script>
+<script src="/payslip/admin/function_js/getEmployee.js"></script>
 
 
 

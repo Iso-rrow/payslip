@@ -19,7 +19,7 @@ var EmployeeDatatableServerSide = (function () {
         className: "row-selected",
       },
       ajax: {
-        url: "/h_r_3/admin/function_php/getEmployee.php", // <--- CHANGE TO YOUR SERVER ENDPOINT
+        url: "/payslip/admin/function_php/getEmployee.php", // <--- CHANGE TO YOUR SERVER ENDPOINT
         type: "POST",
         dataSrc: "data",
       },
@@ -149,7 +149,7 @@ var EmployeeDatatableServerSide = (function () {
             if (result.value) {
               // Call backend to delete
               fetch(
-                `/h_r_3/admin/function_php/deleteEmployee.php?employee_id=${id}`,
+                `/payslip/admin/function_php/deleteEmployee.php?employee_id=${id}`,
                 {
                   method: "POST",
                 }
@@ -190,7 +190,7 @@ var handleEditRows = function () {
       e.preventDefault();
       const id = this.getAttribute("data-id");
 
-      fetch(`/h_r_3/admin/function_php/editEmployee.php?employee_id=${id}`)
+      fetch(`/payslip/admin/function_php/editEmployee.php?employee_id=${id}`)
         .then((res) => {
           if (!res.ok) throw new Error("Network response was not ok");
           return res.json();
@@ -220,15 +220,15 @@ docFields.forEach(field => {
           const imgElement = document.getElementById('edit_employee_img');
           if (imgElement) {
             let imgPath = data.img_name || 'default.jpg';
-            if (!imgPath.includes('/h_r_3/uploads/employees/')) {
-              imgPath = `/h_r_3/uploads/employees/${imgPath}`;
+            if (!imgPath.includes('/payslip/uploads/employees/')) {
+              imgPath = `/payslip/uploads/employees/${imgPath}`;
             }
             imgElement.src = imgPath;
 
           
             imgElement.onerror = function () {
               this.onerror = null;
-              this.src = "/h_r_3/uploads/employees/default.jpg";
+              this.src = "/payslip/uploads/employees/default.jpg";
             };
           }
           const existingImageInput = document.querySelector("#existing_image_name");
@@ -240,7 +240,7 @@ docFields.forEach(field => {
           // Attach image preview logic
           const imageInput = document.getElementById("employee_image_input");
           if (imageInput) {
-            imageInput.value = ""; // Clear previous file if any
+            imageInput.value = ""; 
             imageInput.addEventListener("change", function (event) {
               const file = event.target.files[0];
               if (file) {
@@ -255,7 +255,7 @@ docFields.forEach(field => {
             });
           }
 
-          // Set values
+          
           document.querySelector("#edit_employee_id").value = data.employee_id || "";
           document.querySelector("#edit_auto_employee_id").value = data.auto_employee_id || "";
           document.querySelector("#edit_first_name").value = data.first_name || "";
@@ -265,6 +265,8 @@ docFields.forEach(field => {
           document.querySelector("#edit_department").value = data.department || "";
           document.querySelector("#edit_position").value = data.position || "";
           document.querySelector("#edit_hire_date").value = data.hire_date || "";
+          document.querySelector("#edit_scheduled_time_in").value = data.scheduled_time_in || "";
+          document.querySelector("#edit_scheduled_time_out").value = data.scheduled_time_out || "";
           document.querySelector("#edit_sss_number").value = data.sss_number || "";
           document.querySelector("#edit_philhealth_number").value = data.philhealth_number || "";
           document.querySelector("#edit_pagibig_number").value = data.pagibig_number || "";
@@ -314,7 +316,7 @@ var handleViewRows = function () {
 
       const employeeId = this.getAttribute('data-id');
 
-      fetch(`/h_r_3/admin/function_php/getEmployeeInfo.php?id=${employeeId}`)
+      fetch(`/payslip/admin/function_php/getEmployeeInfo.php?id=${employeeId}`)
         .then(response => response.json())
         .then(data => {
           if (!data.success) {
@@ -327,16 +329,16 @@ var handleViewRows = function () {
           // --- IMAGE ---
           const imgElement = document.getElementById("view_employee_img");
           if (imgElement) {
-            let imgPath = "/h_r_3/uploads/employees/default.jpg";
+            let imgPath = "/payslip/uploads/employees/default.jpg";
             if (emp.img_name && emp.img_name.trim() !== "") {
               imgPath = emp.img_name.includes("/uploads/employees/")
                 ? emp.img_name
-                : `/h_r_3/uploads/employees/${emp.img_name}`;
+                : `/payslip/uploads/employees/${emp.img_name}`;
             }
             imgElement.src = imgPath;
             imgElement.onerror = function () {
               this.onerror = null;
-              this.src = "/h_r_3/uploads/employees/default.jpg";
+              this.src = "/payslip/uploads/employees/default.jpg";
             };
           }
 
@@ -344,7 +346,7 @@ var handleViewRows = function () {
           const fields = [
             'auto_employee_id', 'first_name', 'last_name', 'email', 'contact_number',
             'civil_status', 'sex', 'citizenship', 'height', 'weight', 'religion',
-            'department', 'position', 'hire_date', 'sss_number', 'philhealth_number',
+            'department', 'position', 'hire_date','scheduled_time_in', 'scheduled_time_out', 'sss_number', 'philhealth_number',
             'pagibig_number', 'tin_number', 'salary_rate', 'payment_method', 'address',
             'emergency_name', 'emergency_phone'
           ];
@@ -411,7 +413,7 @@ var handleViewRows = function () {
       e.preventDefault();
       const formData = new FormData(this);
 
-      fetch("/h_r_3/admin/function_php/updateEmployee.php", {
+      fetch("/payslip/admin/function_php/updateEmployee.php", {
         method: "POST",
         body: formData,
       })

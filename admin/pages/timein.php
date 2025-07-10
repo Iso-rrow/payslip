@@ -38,7 +38,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
     }
 
     document.getElementById("timeInButton").addEventListener("click", function() {
-        fetch('/h_r_3/admin/function_php/timein_action.php', {
+        fetch('/payslip/admin/function_php/timein_action.php', {
 
 
             method: 'POST',
@@ -53,7 +53,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
     });
 
     document.getElementById("timeOutButton").addEventListener("click", function() {
-        fetch('/h_r_3/admin/function_php/timein_action.php', {
+        fetch('/payslip/admin/function_php/timein_action.php', {
 
 
             method: 'POST',
