@@ -160,14 +160,9 @@
 					<!-- begin: Attendance Management -->
 					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 						<!--begin:Menu link-->
-						<span class="menu-link">
-							<span class="menu-icon">
-								<i class="ki-duotone ki-time fs-1">
-									<span class="path1"></span>
-									<span class="path2"></span>
-									<span class="path3"></span>
-									<span class="path4"></span>
-								</i>
+						<a class="menu-link" href="index.php?page=attendance">
+							<span class="menu-bullet">
+								<span class="bi bi-calendar-check-fill"></span>
 							</span>
 							<span class="menu-title">Attendance</span>
 							<span class="menu-arrow"></span>

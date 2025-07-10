@@ -58,7 +58,7 @@ $html = '
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
     th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
 </style>
-
+        
 <div class="header">ZHELEXION<br>PAY SLIP</div><br>
 <p><strong>Employee:</strong> ' . $data['first_name'] . ' ' . $data['last_name'] . '</p>
 <p><strong>Pay Period:</strong> ' . $startDate . ' to ' . $endDate . '</p>
