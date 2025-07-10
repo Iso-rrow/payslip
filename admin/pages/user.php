@@ -144,4 +144,4 @@
 
 
 
-<script src="/h_r_3/admin/function_js/getUsers.js"></script>
+<script src="/payslip/admin/function_js/getUsers.js"></script>

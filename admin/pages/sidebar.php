@@ -91,7 +91,7 @@
 								</a>
 								<!--end:All Employees-->
 								<!--begin:Accounting-->
-								<a class="menu-link" href="">
+								<a class="menu-link" href="admin?pages=employee">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
@@ -177,7 +177,7 @@
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
 								<!--begin:All Employees-->
-								<a class="menu-link" href="#">
+								<a class="menu-link" href="admin?pages=attendance">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
@@ -338,7 +338,7 @@
 						</span>
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
-								<a class="menu-link" href="">
+								<a class="menu-link" href="admin?pages=department">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>

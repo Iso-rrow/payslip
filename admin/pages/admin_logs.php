@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../function_php/db.php';
+require_once '../database/connect.php';
 
 $stmt = $pdo->query("SELECT * FROM time_logs ORDER BY date DESC, time_in DESC");
 $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);

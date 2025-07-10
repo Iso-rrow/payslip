@@ -36,7 +36,10 @@ $pages = "Employee Management";
             ///////////////////////////////////////////////////////////// -->
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                 data-bs-target="#addEmployeeModal" title="Add New Employee">
-                <i class="ki-duotone ki-plus fs-6"></i> Add Employee
+                <i class="ki-duotone ki-plus-circle fs-6">
+                    <span class="path1"></span>
+ <span class="path2"></span>
+                </i> Add Employee
             </button>
         </div>
     </div>
