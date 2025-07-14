@@ -1,8 +1,18 @@
-
 <?php
+include __DIR__ . '/../../database/connect.php'; 
 $pages = "Employee Management";
 
+$employees = [];
+$sql = "SELECT * FROM employees ORDER BY last_name ASC";
+$result = $conn->query($sql);
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $employees[] = $row;
+    }
+}
 ?>
+
+
 <!-- Toolbar Header -->
 <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack flex-wrap mb-5">
     <!-- Page Title -->
@@ -127,16 +137,22 @@ $pages = "Employee Management";
                             ////////////////////////////////////////////////////////-->
                         <div class="col-md-6">
                             <label class="form-label">Department</label>
-                            <select name="department" class="form-select" required>
+                            <select name="department" id="departmentSelect" class="form-select" required>
                                 <option value="" disabled selected>Select Department</option>
-                                <option>HR</option>
-                                <option>IT</option>
-                                <option>Finance</option>
+                                <?php
+                                    $departments = $conn->query("SELECT id, name FROM departments");
+                                    while ($dept = $departments->fetch_assoc()):
+                                ?>
+                                    <option value="<?= $dept['id'] ?>"><?= htmlspecialchars($dept['name']) ?></option>
+                                <?php endwhile; ?>
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Position / Role</label>
-                            <input name="position" class="form-control" required>
+                            <select name="position" id="roleSelect" class="form-select" required>
+                                <option value="" disabled selected>Select Role</option>
+                            </select>
+
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Date Hired</label>
@@ -272,48 +288,74 @@ $pages = "Employee Management";
     </button>
 </div>
 <!--end::Group actions-->
+
 <div class="container-fluid">
-    <table id="kt_datatable_example_1" class="table table-sm  table-row-dashed fs-7 gy-3">
+    <table id="kt_datatable_example_1" class="table table-sm table-row-dashed fs-7 gy-3">
         <thead>
             <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
                 <th class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                               data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                     </div>
                 </th>
-                <!-- <th>Employee ID</th> -->
                 <th>Auto ID</th>
                 <th>Last Name</th>
                 <th>First Name</th>
-                <th>Role</th>
                 <th>Department</th>
+                <th>Role</th>
                 <th>Hire Date</th>
-                <!-- <th>Account Created</th> -->
                 <th>Action</th>
             </tr>
         </thead>
+
         <tbody class="text-gray-600 fw-semibold">
+        <?php foreach ($employees as $employee): ?>
             <tr class="text-start text-center fs-7 gs-0 my-2">
-                <th class="w-10px pe-2">
+                <td class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_2 .form-check-input" value="1" />
-                        <!------------------------------------------------Beginning of Employee Profile-------------------------------------------------->
-                        <div class="symbol symbol-25px ms-5">
-                            <?php if (isset($_SESSION['img_name'])): ?>
-                                <img src="<?php echo htmlspecialchars($_SESSION['img_name']); ?>" alt="Employee Image" class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
-                            <?php else: ?>
-                                <img src="/payslip/uploads/employees/default.jpg" alt="Default Image" class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
-                            <?php endif; ?>
-                            </div>
-                        <!------------------------------------------------End of Employee profile-------------------------------------------------->
+                        <input class="form-check-input" type="checkbox" value="<?= $employee['employee_id'] ?>" />
                     </div>
-                </th>
+                </td>
+                    
+                <!-- Auto ID with profile picture -->
+                <td>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <?php
+                        $imagePath = '../../uploads/employees/';
+                        $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'default.jpg';
+                        $imgFullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath . $imgFile;
+
+                        // Fallback if file not found
+                        if (!file_exists($imgFullPath)) {
+                            $imgFile = 'default.jpg';
+                        }
+                        ?>
+                        <div class="symbol symbol-25px me-2">
+                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>"
+                                 alt="Profile" class="rounded-circle border"
+                                 style="width: 25px; height: 25px; object-fit: cover;">
+                        </div>
+                        <span><?= htmlspecialchars($employee['employee_id']) ?></span>
+                    </div>
+                </td>
+
+                <td><?= htmlspecialchars($employee['last_name']) ?></td>
+                <td><?= htmlspecialchars($employee['first_name']) ?></td>
+                <td><?= htmlspecialchars($employee['position']) ?></td>
+                <td><?= htmlspecialchars($employee['department']) ?></td>
+                <td><?= htmlspecialchars(date('F d, Y', strtotime($employee['date_hired']))) ?></td>
+
+                <td>
+                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $employee['employee_id'] ?>">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $employee['employee_id'] ?>">Delete</button>
+                </td>
             </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+
 
 <!-- Edit Employee Modal -->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
@@ -393,16 +435,26 @@ $pages = "Employee Management";
             <label class="form-label">Religion</label>
             <input name="religion" id="edit_religion" class="form-control">
           </div>
-
-          <!-- Job Details -->
-          <div class="col-md-6">
+            <!-- Employment Info -->
+            <div class="col-md-6">
             <label class="form-label">Department</label>
-            <input type="text" class="form-control" id="edit_department" name="department">
-          </div>
-          <div class="col-md-6">
+            <select id="edit_department" name="department" class="form-select" required>
+                <option value="" disabled selected>Select Department</option>
+                <?php
+                $departments = $conn->query("SELECT id, name FROM departments");
+                while ($dept = $departments->fetch_assoc()):
+                ?>
+                <option value="<?= $dept['id'] ?>"><?= htmlspecialchars($dept['name']) ?></option>
+                <?php endwhile; ?>
+            </select>
+            </div>
+            <div class="col-md-6">
             <label class="form-label">Position / Role</label>
-            <input type="text" class="form-control" id="edit_position" name="position">
-          </div>
+            <select id="edit_position" name="position" class="form-select" required>
+                <option value="" disabled selected>Select Role</option>
+            </select>
+            </div>
+
           <div class="col-md-6">
             <label class="form-label">Date Hired</label>
             <input type="date" class="form-control" id="edit_hire_date" name="hire_date">
@@ -652,6 +704,7 @@ $pages = "Employee Management";
 
 <!--/////////////////////Scripts/////////////////////
     ////////////////////////////////////////////////-->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="/payslip/admin/function_js/addEmployeeInfo.js"></script>
 <script src="/payslip/admin/function_js/getEmployee.js"></script>
 
@@ -682,4 +735,6 @@ $pages = "Employee Management";
     addEmployeeModal.addEventListener('shown.bs.modal', () => {
         document.querySelector('#employeeId').value = generateEmployeeID();
     });
+
+    
 </script>

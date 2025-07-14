@@ -183,6 +183,20 @@ var EmployeeDatatableServerSide = (function () {
       });
   };
 
+
+// Helper function to format date into YYYY-MM-DD
+function formatDateForInput(dateStr) {
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const dd = String(date.getDate()).padStart(2, '0');
+        return `${yyyy}-${mm}-${dd}`;
+    }
+    return '';
+}
+
+
 // 5. Edit Employee
 var handleEditRows = function () {
   document.querySelectorAll('[data-kt-employee-table-filter="edit_row"]').forEach((btn) => {
@@ -264,7 +278,7 @@ docFields.forEach(field => {
           document.querySelector("#edit_contact_number").value = data.contact_number || "";
           document.querySelector("#edit_department").value = data.department || "";
           document.querySelector("#edit_position").value = data.position || "";
-          document.querySelector("#edit_hire_date").value = data.hire_date || "";
+          document.querySelector("#edit_hire_date").value = formatDateForInput(data.hire_date);
           document.querySelector("#edit_scheduled_time_in").value = data.scheduled_time_in || "";
           document.querySelector("#edit_scheduled_time_out").value = data.scheduled_time_out || "";
           document.querySelector("#edit_sss_number").value = data.sss_number || "";
@@ -282,6 +296,41 @@ docFields.forEach(field => {
           document.querySelector("#edit_height").value = data.height || "";
           document.querySelector("#edit_weight").value = data.weight || "";
           document.querySelector("#edit_religion").value = data.religion || "";
+          
+         
+          const deptSelect = document.querySelector("#edit_department");
+          if (deptSelect && data.department_id) {
+            deptSelect.value = data.department_id;
+          }
+
+
+        if (data.department_id) {
+        fetch('/payslip/admin/function_php/fetch_roles.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `department_id=${data.department_id}`
+        })
+        .then(res => res.text())
+        .then(html => {
+          const roleSelect = document.querySelector("#edit_position");
+          roleSelect.innerHTML = html;
+
+          
+          const roleIdStr = String(data.role_id);
+
+          setTimeout(() => {
+            const optionToSelect = roleSelect.querySelector(`option[value="${roleIdStr}"]`);
+            if (optionToSelect) {
+              roleSelect.value = roleIdStr;
+            } else {
+              console.warn(`Role ID ${roleIdStr} not found in options.`);
+            }
+          }, 50);
+        });
+      }
+
+
+
 
           const docPreviewContainer = document.querySelector("#edit_documents_preview");
           if (docPreviewContainer) {
@@ -537,4 +586,21 @@ var handleViewRows = function () {
 // On document ready (use KTUtil or jQuery ready)
 document.addEventListener("DOMContentLoaded", function () {
   EmployeeDatatableServerSide.init();
+});
+
+// for roles for edit 
+
+document.querySelector('#edit_department').addEventListener('change', function () {
+  const departmentId = this.value;
+
+  fetch('/payslip/admin/function_php/fetch_roles.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `department_id=${departmentId}`
+  })
+  .then(res => res.text())
+  .then(html => {
+    const roleSelect = document.querySelector('#edit_position');
+    roleSelect.innerHTML = html;
+  });
 });

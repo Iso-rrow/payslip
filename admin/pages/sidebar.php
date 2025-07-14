@@ -1,3 +1,30 @@
+<?php
+session_start();
+
+// Fallback values
+$emp_name = $_SESSION['user_name'] ?? 'Unknown User';
+$emp_dept = 'Human Resource';
+$emp_img  = 'profile.png';
+
+if (isset($_SESSION['employee_id'])) {
+    include __DIR__ . '/../../database/connect.php'; // This fixes the path
+
+    if (isset($conn)) {
+        $stmt = $conn->prepare("SELECT img_name, department FROM employees WHERE employee_id = ?");
+        $stmt->bind_param("i", $_SESSION['employee_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result && $row = $result->fetch_assoc()) {
+            $emp_img = $row['img_name'] ?? $emp_img;
+            $emp_dept = $row['department'] ?? $emp_dept;
+        }
+    } else {
+        error_log("Database connection is not set.");
+    }
+}
+?>
+
+
 	<div id="kt_aside" class="aside py-9" data-kt-drawer="true" data-kt-drawer-name="aside"
 		data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true"
 		data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start"
@@ -91,11 +118,11 @@
 								</a>
 								<!--end:All Employees-->
 								<!--begin:Accounting-->
-								<a class="menu-link" href="admin?pages=employee">
+								<a class="menu-link" href="admin?pages=user">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
-									<span class="menu-title">Accounting Department</span>
+									<span class="menu-title">Users</span>
 								</a>
 								<!--end:Accounting-->
 								<!-- begin: HR -->
@@ -188,36 +215,37 @@
 					</div>
 					<!-- end: Attendance Management -->
 					<!-- begin: Request Management -->
-					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-						<!--begin:Menu link-->
-						<span class="menu-link">
-							<span class="menu-icon">
-								<i class="ki-duotone ki-message-question fs-1">
-									<span class="path1"></span>
-									<span class="path2"></span>
-									<span class="path3"></span>
-								</i>
+						<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+							<!--begin:Menu link-->
+							<span class="menu-link">
+								<span class="menu-icon">
+									<i class="ki-duotone ki-message-question fs-1">
+										<span class="path1"></span>
+										<span class="path2"></span>
+										<span class="path3"></span>
+									</i>
+								</span>
+								<span class="menu-title">File Request</span>
+								<span class="menu-arrow"></span>
 							</span>
-							<span class="menu-title">File Request</span>
-							<span class="menu-arrow"></span>
-						</span>
-						<!--end:Menu link-->
-						<!--begin: Departments-->
-						<div class="menu-sub menu-sub-accordion">
-							<div class="menu-item">
-								<!--begin:All Employees-->
-								<a class="menu-link" href="admin?pages=request">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">All</span>
-								</a>
-								<!--end:All Employees-->
+							<!--end:Menu link-->
+							<!--begin: Request List -->
+							<div class="menu-sub menu-sub-accordion">
+								<div class="menu-item">
+									<!--begin:All Requests-->
+									<a class="menu-link" href="index.php?pages=admin_requests">
+										<span class="menu-bullet">
+											<span class="bullet bullet-dot"></span>
+										</span>
+										<span class="menu-title">All</span>
+									</a>
+									<!--end:All Requests-->
+								</div>
 							</div>
+							<!--end: Request List -->
 						</div>
-						<!--begin: Departments-->
-					</div>
-					<!-- end: Request Management -->
+						<!-- end: Request Management -->
+
 					<!-- begin: Reports Management -->
 					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 						<!--begin:Menu link-->
@@ -362,26 +390,26 @@
 		<div class="aside-footer flex-column-auto px-9" id="kt_aside_menu">
 			<!--begin::User panel-->
 			<div class="d-flex flex-stack">
-				<!--begin::Wrapper-->
-				<div class="d-flex align-items-center">
-					<!--begin::Avatar-->
-					<div class="symbol symbol-circle symbol-40px">
-						<img src="assets/images/profile.png" alt="photo" />
-					</div>
-					<!--end::Avatar-->
-					<!--begin::User info-->
-					<div class="ms-2">
-						<!--begin::Name-->
-						<a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">Admin</a>
-						<!--end::Name-->
-						<!--begin::Major-->
-						<span class="text-muted fw-semibold d-block fs-7 lh-1">Human Resource</span>
-						<!--end::Major-->
-					</div>
-					<!--end::User info-->
-				</div>
-				<!--end::Wrapper-->
-				<!--begin::User menu-->
+
+				
+		<!--begin::Wrapper-->
+<div class="d-flex align-items-center">
+    <div class="symbol symbol-circle symbol-40px">
+        <img src="uploads/employees/<?php echo htmlspecialchars($emp_img); ?>" alt="photo" />
+    </div>
+    <div class="ms-2">
+        <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">
+            <?php echo htmlspecialchars($emp_name); ?>
+        </a>
+        <span class="text-muted fw-semibold d-block fs-7 lh-1">
+            <?php echo htmlspecialchars($emp_dept); ?>
+        </span>
+    </div>
+</div>
+<!--end::Wrapper-->
+
+
+
 				<div class="ms-1">
 					<div class="btn btn-sm btn-icon btn-active-color-primary position-relative me-n2"
 						data-kt-menu-trigger="click" data-kt-menu-overflow="true" data-kt-menu-placement="top-end">

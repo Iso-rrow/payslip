@@ -10,15 +10,17 @@ $orderColumnIdx = $_POST['order'][0]['column'] ?? 0;
 $orderDir = $_POST['order'][0]['dir'] ?? 'asc';
 
 $columns = [
-    'employee_id',
-    'auto_employee_id',
-    'first_name',
-    'last_name',
-    'department',
-    'position',
-    'hire_date'
+    'e.employee_id',
+    'e.auto_employee_id',
+    'e.first_name',
+    'e.last_name',
+    'd.name',
+    'r.name',
+    'e.hire_date'
 ];
-$orderColumn = $columns[$orderColumnIdx] ?? 'hire_date';
+
+$orderColumn = $columns[$orderColumnIdx] ?? 'e.hire_date';
+
 
 $searchSQL = '';
 $params = [];
@@ -50,11 +52,28 @@ if ($searchSQL) {
 }
 
 // Main data query (include img_name)
-$dataSQL = "SELECT employee_id, auto_employee_id, first_name, last_name, department, position, hire_date, img_name
-            FROM employees
-            $searchSQL
-            ORDER BY $orderColumn $orderDir
-            LIMIT ?, ?";
+$dataSQL = "
+    SELECT 
+        e.employee_id, 
+        e.auto_employee_id, 
+        e.first_name, 
+        e.last_name, 
+        d.name AS department, 
+        d.id AS department_id,
+        r.name AS position, 
+        r.id AS role_id,
+        e.hire_date, 
+        e.img_name,
+        e.scheduled_time_in,
+        e.scheduled_time_out
+    FROM employees e
+    LEFT JOIN departments d ON e.department = d.id
+    LEFT JOIN roles r ON e.position = r.id
+    $searchSQL
+    ORDER BY $orderColumn $orderDir
+    LIMIT ?, ?";
+
+
 
 if ($searchSQL) {
     $params[] = $start;
@@ -80,8 +99,22 @@ while ($row = $result->fetch_assoc()) {
     } else {
         $row['img_name'] = '/payslip/uploads/employees/default.jpg';
     }
+    
+     $employees[] = [
+        'employee_id' => $row['employee_id'],
+        'auto_employee_id' => $row['auto_employee_id'],
+        'first_name' => $row['first_name'],
+        'last_name' => $row['last_name'],
+        'department' => $row['department'],
+        'department_id' => $row['department_id'],
+        'position' => $row['position'],
+        'role_id' => $row['role_id'],
+        'hire_date' => $row['hire_date'],
+        'img_name' => $row['img_name'],
+        'scheduled_time_in' => $row['scheduled_time_in'],
+        'scheduled_time_out' => $row['scheduled_time_out']
+    ];
 
-    $employees[] = $row;
 }
 
 $stmt->close();

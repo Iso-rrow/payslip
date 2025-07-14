@@ -6,7 +6,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $documents = '';
     $imageFileName = null;
 
-    // Validate employee_id
     if (empty($data['employee_id'])) {
         echo json_encode(['success' => false, 'message' => 'Missing employee_id']);
         exit;
@@ -28,21 +27,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!empty($_POST['existing_image_name']) && $_POST['existing_image_name'] !== 'default.jpg') {
                 $oldImagePath = '../../uploads/employees/' . basename($_POST['existing_image_name']);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
-                }
+                if (file_exists($oldImagePath)) unlink($oldImagePath);
             }
         }
     } else {
         $imageFileName = $_POST['existing_image_name'] ?? 'default.jpg';
     }
 
-    // Handle documents upload
+    // Handle document uploads
     if (!empty($_FILES['documents']['name'][0])) {
         $uploadDocDir = '../../uploads/documents/';
-        if (!is_dir($uploadDocDir)) {
-            mkdir($uploadDocDir, 0777, true);
-        }
+        if (!is_dir($uploadDocDir)) mkdir($uploadDocDir, 0777, true);
 
         $fileNames = [];
         foreach ($_FILES['documents']['tmp_name'] as $key => $tmp_name) {
@@ -63,41 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $scheduled_time_in = !empty($data['scheduled_time_in']) ? date('H:i:s', strtotime($data['scheduled_time_in'])) : null;
     $scheduled_time_out = !empty($data['scheduled_time_out']) ? date('H:i:s', strtotime($data['scheduled_time_out'])) : null;
 
-    // Query
+    // Prepare UPDATE query
     $query = "UPDATE employees SET 
-        first_name = ?, 
-        last_name = ?, 
-        email = ?, 
-        contact_number = ?, 
-        department = ?, 
-        position = ?, 
-        hire_date = ?, 
-        scheduled_time_in = ?, 
-        scheduled_time_out = ?, 
-        sss_number = ?, 
-        philhealth_number = ?, 
-        pagibig_number = ?, 
-        tin_number = ?, 
-        salary_rate = ?, 
-        payment_method = ?, 
-        address = ?, 
-        emergency_name = ?, 
-        emergency_phone = ?, 
-        civil_status = ?, 
-        sex = ?, 
-        citizenship = ?, 
-        religion = ?, 
-        height = ?, 
-        weight = ?";
+        first_name = ?, last_name = ?, email = ?, contact_number = ?, 
+        department = ?, position = ?, hire_date = ?, 
+        scheduled_time_in = ?, scheduled_time_out = ?, 
+        sss_number = ?, philhealth_number = ?, pagibig_number = ?, tin_number = ?, 
+        salary_rate = ?, payment_method = ?, address = ?, 
+        emergency_name = ?, emergency_phone = ?, civil_status = ?, sex = ?, 
+        citizenship = ?, religion = ?, height = ?, weight = ?";
 
-    $types = "ssssssssssssssssssssssdd";
+    $types = "sssssiisssssssdsssssssdd";
     $params = [
         $data['first_name'],
         $data['last_name'],
         $data['email'],
         $data['contact_number'],
-        $data['department'],
-        $data['position'],
+        intval($data['department']),    // Store department_id
+        intval($data['position']),      // Store role_id
         $data['hire_date'],
         $scheduled_time_in,
         $scheduled_time_out,
@@ -118,7 +96,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         (float) $data['weight']
     ];
 
-    // Optional values
+    if (!empty($hire_date) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $hire_date)) {
+    echo json_encode(['success' => false, 'message' => 'Invalid hire date format']);
+    exit;
+}
+
     if ($imageFileName !== null) {
         $query .= ", img_name = ?";
         $types .= "s";
@@ -131,17 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $params[] = $documents;
     }
 
-    // Finalize
     $query .= " WHERE employee_id = ?";
     $types .= "i";
     $params[] = (int) $data['employee_id'];
 
-    // DEBUG
-    // error_log("QUERY: $query");
-    // error_log("TYPES: $types");
-    // error_log("PARAMS: " . print_r($params, true));
-
-    // Execute
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         echo json_encode(['success' => false, 'message' => 'Prepare failed: ' . $conn->error]);

@@ -97,7 +97,7 @@ License: For each use you must have a valid license purchased only from above li
 					</a>
 					<!--end::Logo-->
 					<!--begin::Title-->
-					<h2 class="text-white ki-text-bold fw-2 fs-3 m-0">Branding tools designed for your business</h2>
+					<h2 class="text-white ki-text-bold fw-2 fs-3 m-0">The only way to do great work is to love what you do</h2>
 					<!--end::Title-->
 				</div>
 				<!--begin::Aside-->
@@ -114,10 +114,10 @@ License: For each use you must have a valid license purchased only from above li
 							<!--begin::Heading-->
 							<div class="text-center mb-11">
 								<!--begin::Title-->
-								<h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
+								<h1 class="text-gray-900 fw-bolder mb-3">Welcome</h1>
 								<!--end::Title-->
 								<!--begin::Subtitle-->
-								<div class="text-gray-500 fw-semibold fs-6">Budots</div>
+								<div class="text-gray-500 fw-semibold fs-6">Sign In</div>
 								<!--end::Subtitle=-->
 							</div>
 							<!--begin::Heading-->

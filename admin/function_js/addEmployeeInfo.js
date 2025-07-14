@@ -1,3 +1,4 @@
+
 document.querySelector('#addEmployeeForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -58,5 +59,26 @@ document.querySelector('#addEmployeeForm').addEventListener('submit', function(e
     .finally(() => {
         submitBtn.disabled = false;
         submitBtn.innerText = 'Save Employee';
+    });
+});
+
+
+
+$(document).ready(function() {
+    $('#departmentSelect').on('change', function() {
+        const deptId = $(this).val();
+        $('#roleSelect').html('<option>Loading...</option>');
+
+        $.ajax({
+            url: '/payslip/admin/function_php/fetch_roles.php',
+            method: 'POST',
+            data: { department_id: deptId },
+            success: function(response) {
+                $('#roleSelect').html(response);
+            },
+            error: function() {
+                $('#roleSelect').html('<option value="">Error loading roles</option>');
+            }
+        });
     });
 });
