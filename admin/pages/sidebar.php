@@ -427,24 +427,23 @@ if (isset($_SESSION['employee_id'])) {
 		<div class="aside-footer flex-column-auto px-9" id="kt_aside_menu">
 			<!--begin::User panel-->
 			<div class="d-flex flex-stack">
-		</div>
-</div>
+
 
 				
 		<!--begin::Wrapper-->
-<div class="d-flex align-items-center">
-    <div class="symbol symbol-circle symbol-40px">
-        <img src="uploads/employees/<?php echo htmlspecialchars($emp_img); ?>" alt="photo" />
-    </div>
-    <div class="ms-2">
-        <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">
-            <?php echo htmlspecialchars($emp_name); ?>
-        </a>
-        <span class="text-muted fw-semibold d-block fs-7 lh-1">
-            <?php echo htmlspecialchars($emp_dept); ?>
-        </span>
-    </div>
-</div>
+		<div class="d-flex align-items-center">
+			<div class="symbol symbol-circle symbol-40px">
+				<img src="uploads/employees/<?php echo htmlspecialchars($emp_img); ?>" alt="photo" />
+			</div>
+			<div class="ms-2">
+				<a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">
+					<?php echo htmlspecialchars($emp_name); ?>
+				</a>
+				<span class="text-muted fw-semibold d-block fs-7 lh-1">
+					<?php echo htmlspecialchars($emp_dept); ?>
+				</span>
+			</div>
+		</div>
 <!--end::Wrapper-->
 
 
@@ -572,10 +571,12 @@ if (isset($_SESSION['employee_id'])) {
 						<!--end::Menu item-->
 					</div>
 					<!--end::User account menu-->
-				</div>
+					</div>
 				<!--end::User menu-->
-			</div>
+				</div>
 			<!--end::User panel-->
-		</div>
+			</div>
 		<!--end::Footer-->
+		</div>
 	</div>
+</div>
