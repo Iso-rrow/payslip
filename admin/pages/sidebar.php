@@ -214,6 +214,39 @@ if (isset($_SESSION['employee_id'])) {
 						<!--begin: Departments-->
 					</div>
 					<!-- end: Attendance Management -->
+					 <!-- begin: Payslip -->
+					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+						<!--begin:Menu link-->
+						<span class="menu-link">
+							<span class="menu-icon">
+								<i class="ki-duotone ki-badge fs-1">
+									<span class="path1"></span>
+									<span class="path2"></span>
+									<span class="path3"></span>
+									<span class="path4"></span>
+									<span class="path5"></span>
+								</i>
+							</span>
+							<span class="menu-title">Payslip</span>
+							<span class="menu-arrow"></span>
+						</span>
+						<!--end:Menu link-->
+						<!--begin: Departments-->
+						<div class="menu-sub menu-sub-accordion">
+							<div class="menu-item">
+								<!--begin:All Employees-->
+								<a class="menu-link" href="admin?pages=payslips">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">All</span>
+								</a>
+								<!--end:All Employees-->
+							</div>
+						</div>
+						<!--begin: Payslip-->
+					</div>
+					<!-- end: Request Management -->
 					<!-- begin: Request Management -->
 						<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 							<!--begin:Menu link-->

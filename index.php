@@ -34,7 +34,7 @@ License: For each use you must have a valid license purchased only from above li
 	<meta property="og:url" content="https://keenthemes.com/metronic" />
 	<meta property="og:site_name" content="Metronic by Keenthemes" />
 	<link rel="canonical" href="http://preview.keenthemes.comauthentication/layouts/creative/sign-in.html" />
-	<link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+	<link rel="shortcut icon" href="assets/images/logo.png" />
 	<!--begin::Fonts(mandatory for all pages)-->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 	<!--end::Fonts-->
@@ -93,11 +93,11 @@ License: For each use you must have a valid license purchased only from above li
 				<div class="d-flex flex-center flex-lg-start flex-column ">
 					<!--begin::Logo-->
 					<a href="#" class="mb-7">
-						<img alt="Logo" width="200" src="assets\media\logos\default-large.svg" />
+						<img alt="Logo" width="300" src="assets\images\zhelixion.png" />
 					</a>
 					<!--end::Logo-->
 					<!--begin::Title-->
-					<h2 class="text-white ki-text-bold fw-2 fs-3 m-0">The only way to do great work is to love what you do</h2>
+					<h2 class="text-white ki-text-bold fw-2 fs-3 m-0">Let's Transform your Idea into Reality</h2>
 					<!--end::Title-->
 				</div>
 				<!--begin::Aside-->
@@ -117,7 +117,7 @@ License: For each use you must have a valid license purchased only from above li
 								<h1 class="text-gray-900 fw-bolder mb-3">Welcome</h1>
 								<!--end::Title-->
 								<!--begin::Subtitle-->
-								<div class="text-gray-500 fw-semibold fs-6">Sign In</div>
+								<div class="text-gray-500 fw-semibold fs-6"></div>
 								<!--end::Subtitle=-->
 							</div>
 							<!--begin::Heading-->
@@ -150,7 +150,7 @@ License: For each use you must have a valid license purchased only from above li
 							</div>
 							<!--end::Submit button-->
 							<!--begin::Sign up-->
-
+							
 							<!--end::Sign up-->
 						</form>
 						<!--end::Form-->
