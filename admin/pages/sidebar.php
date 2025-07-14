@@ -69,6 +69,18 @@ if (isset($_SESSION['employee_id'])) {
 								<!--end:Menu link-->
 							</div>
 							<!--end:Menu item-->
+							<!--begin:Menu item-->
+							<div class="menu-item">
+								<!--begin:Menu link-->
+								<a class="menu-link" href="admin?pages=employeedashboard">
+									<span class="menu-bullet">
+										<span class="bullet bullet-dot"></span>
+									</span>
+									<span class="menu-title">Time In</span>
+								</a>
+								<!--end:Menu link-->
+							</div>
+							<!--end:Menu item-->
 							<div class="menu-inner flex-column collapse" id="kt_app_sidebar_menu_dashboards_collapse">
 							</div>
 							<!-- <div class="menu-item">
@@ -117,14 +129,6 @@ if (isset($_SESSION['employee_id'])) {
 									<span class="menu-title">All</span>
 								</a>
 								<!--end:All Employees-->
-								<!--begin:Accounting-->
-								<a class="menu-link" href="admin?pages=user">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">Users</span>
-								</a>
-								<!--end:Accounting-->
 								<!-- begin: HR -->
 								<a class="menu-link" href="">
 									<span class="menu-bullet">
@@ -423,6 +427,8 @@ if (isset($_SESSION['employee_id'])) {
 		<div class="aside-footer flex-column-auto px-9" id="kt_aside_menu">
 			<!--begin::User panel-->
 			<div class="d-flex flex-stack">
+		</div>
+</div>
 
 				
 		<!--begin::Wrapper-->

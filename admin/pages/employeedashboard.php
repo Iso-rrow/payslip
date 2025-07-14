@@ -1,11 +1,13 @@
 <?php
+$pages = "Employee Timein";
+
 session_start();
 if (!isset($_SESSION['employee_id'])) {
     header('Location: ../../authentication/login.php');
 
     exit;
 }
-include '../../database/connect.php';
+include __DIR__ . '/../../database/connect.php'; 
 
 
 $employee_id = $_SESSION['employee_id'];
@@ -22,15 +24,47 @@ $att_stmt->bind_param("i", $employee_id);
 $att_stmt->execute();
 $att_result = $att_stmt->get_result();
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <title>Employee Dashboard</title>
-</head>
-<body>
+<!-- Toolbar Header -->
+<div id="kt_toolbar_container" class="container-fluid d-flex flex-stack flex-wrap mb-5">
+    <!-- Page Title -->
+    <div class="page-title d-flex flex-column me-5 py-2">
+        <span class="text-dark fw-bold fs-3 mb-0"><?php echo htmlspecialchars($pages); ?></span>
+    </div>
+
+    <!--///////////////////// Search & Toolbar Search Box/////////////////////
+        /////////////////////////////////////////////////////////////////////-->
+    <div class="d-flex flex-stack mb-5 gap-4">
+        <!--begin::Search-->
+        <!-- <div class="d-flex align-items-center position-relative my-1">
+            <i class="ki-duotone ki-magnifier fs-5 position-absolute ms-6"><span class="path1"></span><span
+                    class="path2"></span></i>
+            <input type="text" data-kt-employee-table-filter="search"
+                class="form-control form-control-sm form-control-solid w-250px ps-15" placeholder="Search Employee"/>-->
+        </div>
+
+        <!--/////////////////////Filter Button/////////////////////
+            ///////////////////////////////////////////////////////-->
+
+        <div class="d-flex justify-content-end " data-kt-employee-table-toolbar="base">
+            <!--begin::Filter-->
+            <button type="button" class="btn btn-light-primary btn-sm me-3" data-bs-toggle="tooltip"
+                title="">
+                <i class="ki-duotone ki-filter fs-6"><span class="path1"></span><span class="path2"></span></i>
+                Filter
+            </button>
+            <button type="button" class="btn btn-primary btn-sm me-3" data-bs-toggle="modal" data-bs-target="#addDepartmentModal" title="Add New Department">
+                <i class="ki-duotone ki-plus-circle fs-6"><span class="path1"></span><span class="path2"></span></i>
+                Time In
+            </button>
+            <!--///////////////////// Add Customer Button/////////////////////
+            ///////////////////////////////////////////////////////////// -->   
+        </div>
+</div>
+
+<!--/////////////////////Datatable/////////////////////
+    //////////////////////////////////////////////////-->
+<div>
     <h2>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?></h2>
 
     <h3>Your Credentials:</h3>
@@ -59,10 +93,10 @@ $att_result = $att_stmt->get_result();
     <iframe src="timein.php" width="100%" height="300" style="border:none;"></iframe>
         
     <!-- Request File Button -->
-<button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#requestModal">
-    Request File
-</button>
-
+    <button class="btn btn-primary mt-3" data-bs-toggle="modal" data-bs-target="#requestModal">
+        Request File
+    </button>
+</div>
      <!-- Request Modal -->
 <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -98,5 +132,3 @@ $att_result = $att_stmt->get_result();
 
     <br><br>
     <a href="../logout.php">Logout</a>
-</body>
-</html>

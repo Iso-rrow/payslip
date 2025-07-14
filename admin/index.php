@@ -5,14 +5,11 @@ if (!isset($_SESSION['user_id'])) {
 	header('Location: ../index.php');
 	exit;
 }
-
 ?>
 
 <!DOCTYPE html>
-
 <html lang="en">
 <!--begin::Head-->
-
 <head>
 	<base href="../">
 	<title>Admin</title>
@@ -221,7 +218,7 @@ if (!isset($_SESSION['user_id'])) {
 												<div class="d-flex flex-stack py-4">
 													<div class="d-flex align-items-center">
 														<div class="mb-0 me-2">
-															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold">Harassment</a>
+															<a href="#" class="fs-6 text-gray-800 text-hover-primary fw-bold"></a>
 															<div class="text-gray-500 fs-7">Matthew Boquiren</div>
 														</div>
 													</div>
