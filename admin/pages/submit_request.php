@@ -2,16 +2,10 @@
 session_start();
 include '../../database/connect.php';
 
-if (!isset($_SESSION['employee_id'])) {
-    header('Location: /payslip/authentication/login.php');
-    exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $employee_id = $_SESSION['employee_id']; 
     $request_type = $_POST['request_type'];
     $notes = $_POST['notes'] ?? '';
-
 
     $status = 'Pending';
     $department_status = 'Pending';
@@ -25,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     $stmt->bind_param(
-        "issssssss", 
+        "isssssss", 
         $employee_id,
         $request_type,
         $notes,
