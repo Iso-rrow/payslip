@@ -41,7 +41,7 @@ if ($result && $user = $result->fetch_assoc()) {
         if ($user['role'] === 'admin') {
             echo json_encode(['success' => true, 'redirect' => '/payslip/admin/index.php']);
         } else {
-            echo json_encode(['success' => true, 'redirect' => '/payslip/admin/pages/employeedashboard.php']);
+            echo json_encode(['success' => true, 'redirect' => '/payslip/admin/?pages=employeedashboard']);
         }
         exit;
     }

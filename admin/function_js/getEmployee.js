@@ -3,7 +3,6 @@ var dt;
 // Employee Datatable with Server-Side Processing
 var EmployeeDatatableServerSide = (function () {
   var table;
-  
 
   // 1. Initialize DataTable
   var initDatatable = function () {
@@ -131,8 +130,10 @@ var EmployeeDatatableServerSide = (function () {
           e.preventDefault();
           const id = this.getAttribute("data-id");
           const row = this.closest("tr");
-         const empName = row.querySelectorAll("td")[2].innerText + " " + row.querySelectorAll("td")[3].innerText;
-
+          const empName =
+            row.querySelectorAll("td")[2].innerText +
+            " " +
+            row.querySelectorAll("td")[3].innerText;
 
           Swal.fire({
             text: `Are you sure you want to delete ${empName}?`,
@@ -183,275 +184,347 @@ var EmployeeDatatableServerSide = (function () {
       });
   };
 
-
-// Helper function to format date into YYYY-MM-DD
-function formatDateForInput(dateStr) {
+  // Helper function to format date into YYYY-MM-DD
+  function formatDateForInput(dateStr) {
     const date = new Date(dateStr);
     if (!isNaN(date.getTime())) {
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}`;
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
-    return '';
-}
-
-
-// 5. Edit Employee
-var handleEditRows = function () {
-  document.querySelectorAll('[data-kt-employee-table-filter="edit_row"]').forEach((btn) => {
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      const id = this.getAttribute("data-id");
-
-      fetch(`/payslip/admin/function_php/editEmployee.php?employee_id=${id}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Network response was not ok");
-          return res.json();
-        })
-        .then((data) => {
-          // Preview individual document files
-const docFields = ['sss_file', 'philhealth_file', 'pagibig_file', 'drugtest_file', 'nbi_file', 'medical_file'];
-docFields.forEach(field => {
-  const previewEl = document.getElementById(`edit_${field}_preview`);
-  if (previewEl) {
-    if (data[field]) {
-      const fileName = data[field].split('/').pop();
-      previewEl.innerHTML = `<a href="${data[field]}" target="_blank">${fileName}</a>`;
-    } else {
-      previewEl.innerHTML = "<em>No file uploaded.</em>";
-    }
+    return "";
   }
-});
-          console.log("Employee fetched:", data);
 
-          if (data.error) {
-            alert(data.error);
-            return;
-          }
+  // 5. Edit Employee
+  var handleEditRows = function () {
+    document
+      .querySelectorAll('[data-kt-employee-table-filter="edit_row"]')
+      .forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          const id = this.getAttribute("data-id");
 
-          // Show image preview if available
-          const imgElement = document.getElementById('edit_employee_img');
-          if (imgElement) {
-            let imgPath = data.img_name || 'default.jpg';
-            if (!imgPath.includes('/payslip/uploads/employees/')) {
-              imgPath = `/payslip/uploads/employees/${imgPath}`;
-            }
-            imgElement.src = imgPath;
-
-          
-            imgElement.onerror = function () {
-              this.onerror = null;
-              this.src = "/payslip/uploads/employees/default.jpg";
-            };
-          }
-          const existingImageInput = document.querySelector("#existing_image_name");
-          if (existingImageInput) {
-            existingImageInput.value = data.img_name || "default.jpg";
-          }
-
-
-          // Attach image preview logic
-          const imageInput = document.getElementById("employee_image_input");
-          if (imageInput) {
-            imageInput.value = ""; 
-            imageInput.addEventListener("change", function (event) {
-              const file = event.target.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                  if (imgElement) {
-                    imgElement.src = e.target.result;
+          fetch(
+            `/payslip/admin/function_php/editEmployee.php?employee_id=${id}`
+          )
+            .then((res) => {
+              if (!res.ok) throw new Error("Network response was not ok");
+              return res.json();
+            })
+            .then((data) => {
+              // Preview individual document files
+              const docFields = [
+                "sss_file",
+                "philhealth_file",
+                "pagibig_file",
+                "drugtest_file",
+                "nbi_file",
+                "medical_file",
+              ];
+              docFields.forEach((field) => {
+                const previewEl = document.getElementById(
+                  `edit_${field}_preview`
+                );
+                if (previewEl) {
+                  if (data[field]) {
+                    const fileName = data[field].split("/").pop();
+                    previewEl.innerHTML = `<a href="${data[field]}" target="_blank">${fileName}</a>`;
+                  } else {
+                    previewEl.innerHTML = "<em>No file uploaded.</em>";
                   }
-                };
-                reader.readAsDataURL(file);
-              }
-            });
-          }
-
-          
-          document.querySelector("#edit_employee_id").value = data.employee_id || "";
-          document.querySelector("#edit_auto_employee_id").value = data.auto_employee_id || "";
-          document.querySelector("#edit_first_name").value = data.first_name || "";
-          document.querySelector("#edit_last_name").value = data.last_name || "";
-          document.querySelector("#edit_email").value = data.email || "";
-          document.querySelector("#edit_contact_number").value = data.contact_number || "";
-          document.querySelector("#edit_department").value = data.department || "";
-          document.querySelector("#edit_position").value = data.position || "";
-          document.querySelector("#edit_hire_date").value = formatDateForInput(data.hire_date);
-          document.querySelector("#edit_scheduled_time_in").value = data.scheduled_time_in || "";
-          document.querySelector("#edit_scheduled_time_out").value = data.scheduled_time_out || "";
-          document.querySelector("#edit_sss_number").value = data.sss_number || "";
-          document.querySelector("#edit_philhealth_number").value = data.philhealth_number || "";
-          document.querySelector("#edit_pagibig_number").value = data.pagibig_number || "";
-          document.querySelector("#edit_tin_number").value = data.tin_number || "";
-          document.querySelector("#edit_salary_rate").value = data.salary_rate || "";
-          document.querySelector("#edit_payment_method").value = data.payment_method || "";
-          document.querySelector("#edit_address").value = data.address || "";
-          document.querySelector("#edit_emergency_name").value = data.emergency_name || "";
-          document.querySelector("#edit_emergency_phone").value = data.emergency_phone || "";
-          document.querySelector("#edit_civil_status").value = data.civil_status || "";
-          document.querySelector("#edit_sex").value = data.sex || "";
-          document.querySelector("#edit_citizenship").value = data.citizenship || "";
-          document.querySelector("#edit_height").value = data.height || "";
-          document.querySelector("#edit_weight").value = data.weight || "";
-          document.querySelector("#edit_religion").value = data.religion || "";
-          
-         
-          const deptSelect = document.querySelector("#edit_department");
-          if (deptSelect && data.department_id) {
-            deptSelect.value = data.department_id;
-          }
-
-
-        if (data.department_id) {
-        fetch('/payslip/admin/function_php/fetch_roles.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `department_id=${data.department_id}`
-        })
-        .then(res => res.text())
-        .then(html => {
-          const roleSelect = document.querySelector("#edit_position");
-          roleSelect.innerHTML = html;
-
-          
-          const roleIdStr = String(data.role_id);
-
-          setTimeout(() => {
-            const optionToSelect = roleSelect.querySelector(`option[value="${roleIdStr}"]`);
-            if (optionToSelect) {
-              roleSelect.value = roleIdStr;
-            } else {
-              console.warn(`Role ID ${roleIdStr} not found in options.`);
-            }
-          }, 50);
-        });
-      }
-
-
-
-
-          const docPreviewContainer = document.querySelector("#edit_documents_preview");
-          if (docPreviewContainer) {
-            if (data.documents) {
-              const fileLinks = data.documents.split(',').map(path => {
-                const fileName = path.split('/').pop();
-                return `<a href="${path}" target="_blank">${fileName}</a>`;
-              }).join("<br>");
-              docPreviewContainer.innerHTML = fileLinks;
-            } else {
-              docPreviewContainer.innerHTML = "<em>No documents uploaded.</em>";
-            }
-          }
-
-          const editModal = new bootstrap.Modal(document.getElementById("editEmployeeModal"));
-          editModal.show();
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-          alert("Failed to fetch employee data.");
-        });
-    });
-  });
-};
-
-
- // 6. View Employee
-var handleViewRows = function () {
-  document.querySelectorAll('[data-kt-employee-table-filter="view_row"]').forEach(btn => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      const employeeId = this.getAttribute('data-id');
-
-      fetch(`/payslip/admin/function_php/getEmployeeInfo.php?id=${employeeId}`)
-        .then(response => response.json())
-        .then(data => {
-          if (!data.success) {
-            alert('Could not load employee data.');
-            return;
-          }
-
-          const emp = data.employee;
-
-          // --- IMAGE ---
-          const imgElement = document.getElementById("view_employee_img");
-          if (imgElement) {
-            let imgPath = "/payslip/uploads/employees/default.jpg";
-            if (emp.img_name && emp.img_name.trim() !== "") {
-              imgPath = emp.img_name.includes("/uploads/employees/")
-                ? emp.img_name
-                : `/payslip/uploads/employees/${emp.img_name}`;
-            }
-            imgElement.src = imgPath;
-            imgElement.onerror = function () {
-              this.onerror = null;
-              this.src = "/payslip/uploads/employees/default.jpg";
-            };
-          }
-
-          // --- FIELD SETTERS ---
-          const fields = [
-            'auto_employee_id', 'first_name', 'last_name', 'email', 'contact_number',
-            'civil_status', 'sex', 'citizenship', 'height', 'weight', 'religion',
-            'department', 'position', 'hire_date','scheduled_time_in', 'scheduled_time_out', 'sss_number', 'philhealth_number',
-            'pagibig_number', 'tin_number', 'salary_rate', 'payment_method', 'address',
-            'emergency_name', 'emergency_phone'
-          ];
-
-          fields.forEach(id => {
-            const el = document.getElementById(`view_${id}`);
-            if (el) el.value = emp[id] || '';
-          });
-
-         
-          const docFields = ['sss_file', 'philhealth_file', 'pagibig_file', 'drugtest_file', 'nbi_file', 'medical_file'];
-          docFields.forEach(field => {
-            const previewEl = document.getElementById(`view_${field}_preview`);
-            if (previewEl) {
-              if (emp[field]) {
-                const fileName = emp[field].split('/').pop();
-                previewEl.innerHTML = `<a href="${emp[field]}" target="_blank">${fileName}</a>`;
-              } else {
-                previewEl.innerHTML = "<em>No file uploaded.</em>";
-              }
-            }
-          });
-
-          
-          const docPreview = document.getElementById('view_documents_preview');
-          if (docPreview) {
-            docPreview.innerHTML = '';
-            if (emp.documents) {
-              emp.documents.split(',').forEach(file => {
-                const link = document.createElement('a');
-                link.href = file;
-                link.textContent = file.split('/').pop();
-                link.target = '_blank';
-                link.classList.add('d-block');
-                docPreview.appendChild(link);
+                }
               });
-            } else {
-              docPreview.innerHTML = "<em>No documents uploaded.</em>";
-            }
-          }
+              console.log("Employee fetched:", data);
 
-          // Show modal
-          const modal = new bootstrap.Modal(document.getElementById('viewEmployeeModal'));
-          modal.show();
-        })
-        .catch(err => {
-          console.error(err);
-          alert('Error retrieving employee info.');
+              if (data.error) {
+                alert(data.error);
+                return;
+              }
+
+              // Show image preview if available
+              const imgElement = document.getElementById("edit_employee_img");
+              if (imgElement) {
+                let imgPath = data.img_name || "default.jpg";
+                if (!imgPath.includes("/payslip/uploads/employees/")) {
+                  imgPath = `/payslip/uploads/employees/${imgPath}`;
+                }
+                imgElement.src = imgPath;
+
+                imgElement.onerror = function () {
+                  this.onerror = null;
+                  this.src = "/payslip/uploads/employees/default.jpg";
+                };
+              }
+              const existingImageInput = document.querySelector(
+                "#existing_image_name"
+              );
+              if (existingImageInput) {
+                existingImageInput.value = data.img_name || "default.jpg";
+              }
+
+              // Attach image preview logic
+              const imageInput = document.getElementById(
+                "employee_image_input"
+              );
+              if (imageInput) {
+                imageInput.value = "";
+                imageInput.addEventListener("change", function (event) {
+                  const file = event.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                      if (imgElement) {
+                        imgElement.src = e.target.result;
+                      }
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                });
+              }
+
+              document.querySelector("#edit_employee_id").value =
+                data.employee_id || "";
+              document.querySelector("#edit_auto_employee_id").value =
+                data.auto_employee_id || "";
+              document.querySelector("#edit_first_name").value =
+                data.first_name || "";
+              document.querySelector("#edit_last_name").value =
+                data.last_name || "";
+              document.querySelector("#edit_email").value = data.email || "";
+              document.querySelector("#edit_contact_number").value =
+                data.contact_number || "";
+              document.querySelector("#edit_department").value =
+                data.department || "";
+              document.querySelector("#edit_position").value =
+                data.position || "";
+              document.querySelector("#edit_hire_date").value =
+                formatDateForInput(data.hire_date);
+              document.querySelector("#edit_scheduled_time_in").value =
+                data.scheduled_time_in || "";
+              document.querySelector("#edit_scheduled_time_out").value =
+                data.scheduled_time_out || "";
+              document.querySelector("#edit_sss_number").value =
+                data.sss_number || "";
+              document.querySelector("#edit_philhealth_number").value =
+                data.philhealth_number || "";
+              document.querySelector("#edit_pagibig_number").value =
+                data.pagibig_number || "";
+              document.querySelector("#edit_tin_number").value =
+                data.tin_number || "";
+              document.querySelector("#edit_salary_rate").value =
+                data.salary_rate || "";
+              document.querySelector("#edit_payment_method").value =
+                data.payment_method || "";
+              document.querySelector("#edit_address").value =
+                data.address || "";
+              document.querySelector("#edit_emergency_name").value =
+                data.emergency_name || "";
+              document.querySelector("#edit_emergency_phone").value =
+                data.emergency_phone || "";
+              document.querySelector("#edit_civil_status").value =
+                data.civil_status || "";
+              document.querySelector("#edit_sex").value = data.sex || "";
+              document.querySelector("#edit_citizenship").value =
+                data.citizenship || "";
+              document.querySelector("#edit_height").value = data.height || "";
+              document.querySelector("#edit_weight").value = data.weight || "";
+              document.querySelector("#edit_religion").value =
+                data.religion || "";
+
+              const deptSelect = document.querySelector("#edit_department");
+              if (deptSelect && data.department_id) {
+                deptSelect.value = data.department_id;
+              }
+
+              if (data.department_id) {
+                fetch("/payslip/admin/function_php/fetch_roles.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  body: `department_id=${data.department_id}`,
+                })
+                  .then((res) => res.text())
+                  .then((html) => {
+                    const roleSelect = document.querySelector("#edit_position");
+                    roleSelect.innerHTML = html;
+
+                    const roleIdStr = String(data.role_id);
+
+                    setTimeout(() => {
+                      const optionToSelect = roleSelect.querySelector(
+                        `option[value="${roleIdStr}"]`
+                      );
+                      if (optionToSelect) {
+                        roleSelect.value = roleIdStr;
+                      } else {
+                        console.warn(
+                          `Role ID ${roleIdStr} not found in options.`
+                        );
+                      }
+                    }, 50);
+                  });
+              }
+
+              const docPreviewContainer = document.querySelector(
+                "#edit_documents_preview"
+              );
+              if (docPreviewContainer) {
+                if (data.documents) {
+                  const fileLinks = data.documents
+                    .split(",")
+                    .map((path) => {
+                      const fileName = path.split("/").pop();
+                      return `<a href="${path}" target="_blank">${fileName}</a>`;
+                    })
+                    .join("<br>");
+                  docPreviewContainer.innerHTML = fileLinks;
+                } else {
+                  docPreviewContainer.innerHTML =
+                    "<em>No documents uploaded.</em>";
+                }
+              }
+
+              const editModal = new bootstrap.Modal(
+                document.getElementById("editEmployeeModal")
+              );
+              editModal.show();
+            })
+            .catch((error) => {
+              console.error("Fetch error:", error);
+              alert("Failed to fetch employee data.");
+            });
         });
-    });
-  });
-};
+      });
+  };
 
+  // 6. View Employee
+  var handleViewRows = function () {
+    document
+      .querySelectorAll('[data-kt-employee-table-filter="view_row"]')
+      .forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
 
+          const employeeId = this.getAttribute("data-id");
 
+          fetch(
+            `/payslip/admin/function_php/getEmployeeInfo.php?id=${employeeId}`
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              if (!data.success) {
+                alert("Could not load employee data.");
+                return;
+              }
 
+              const emp = data.employee;
+
+              // --- IMAGE ---
+              const imgElement = document.getElementById("view_employee_img");
+              if (imgElement) {
+                let imgPath = "/payslip/uploads/employees/default.jpg";
+                if (emp.img_name && emp.img_name.trim() !== "") {
+                  imgPath = emp.img_name.includes("/uploads/employees/")
+                    ? emp.img_name
+                    : `/payslip/uploads/employees/${emp.img_name}`;
+                }
+                imgElement.src = imgPath;
+                imgElement.onerror = function () {
+                  this.onerror = null;
+                  this.src = "/payslip/uploads/employees/default.jpg";
+                };
+              }
+
+              // --- FIELD SETTERS ---
+              const fields = [
+                "auto_employee_id",
+                "first_name",
+                "last_name",
+                "email",
+                "contact_number",
+                "civil_status",
+                "sex",
+                "citizenship",
+                "height",
+                "weight",
+                "religion",
+                "department",
+                "position",
+                "hire_date",
+                "scheduled_time_in",
+                "scheduled_time_out",
+                "sss_number",
+                "philhealth_number",
+                "pagibig_number",
+                "tin_number",
+                "salary_rate",
+                "payment_method",
+                "address",
+                "emergency_name",
+                "emergency_phone",
+              ];
+
+              fields.forEach((id) => {
+                const el = document.getElementById(`view_${id}`);
+                if (el) el.value = emp[id] || "";
+              });
+
+              const docFields = [
+                "sss_file",
+                "philhealth_file",
+                "pagibig_file",
+                "drugtest_file",
+                "nbi_file",
+                "medical_file",
+              ];
+              docFields.forEach((field) => {
+                const previewEl = document.getElementById(
+                  `view_${field}_preview`
+                );
+                if (previewEl) {
+                  if (emp[field]) {
+                    const fileName = emp[field].split("/").pop();
+                    previewEl.innerHTML = `<a href="${emp[field]}" target="_blank">${fileName}</a>`;
+                  } else {
+                    previewEl.innerHTML = "<em>No file uploaded.</em>";
+                  }
+                }
+              });
+
+              const docPreview = document.getElementById(
+                "view_documents_preview"
+              );
+              if (docPreview) {
+                docPreview.innerHTML = "";
+                if (emp.documents) {
+                  emp.documents.split(",").forEach((file) => {
+                    const link = document.createElement("a");
+                    link.href = file;
+                    link.textContent = file.split("/").pop();
+                    link.target = "_blank";
+                    link.classList.add("d-block");
+                    docPreview.appendChild(link);
+                  });
+                } else {
+                  docPreview.innerHTML = "<em>No documents uploaded.</em>";
+                }
+              }
+
+              // Show modal
+              const modal = new bootstrap.Modal(
+                document.getElementById("viewEmployeeModal")
+              );
+              modal.show();
+            })
+            .catch((err) => {
+              console.error(err);
+              alert("Error retrieving employee info.");
+            });
+        });
+      });
+  };
 
   ////////////////////update function//////////////////////
   /////////////////////////////////////////////////////////
@@ -536,7 +609,6 @@ var handleViewRows = function () {
     }
   };
 
-
   var toggleToolbars = function () {
     const container = document.querySelector("#kt_datatable_example_1");
     const toolbarBase = document.querySelector(
@@ -588,19 +660,21 @@ document.addEventListener("DOMContentLoaded", function () {
   EmployeeDatatableServerSide.init();
 });
 
-// for roles for edit 
+// for roles for edit
 
-document.querySelector('#edit_department').addEventListener('change', function () {
-  const departmentId = this.value;
+// document
+//   .querySelector("#edit_department")
+//   .addEventListener("change", function () {
+//     const departmentId = this.value;
 
-  fetch('/payslip/admin/function_php/fetch_roles.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `department_id=${departmentId}`
-  })
-  .then(res => res.text())
-  .then(html => {
-    const roleSelect = document.querySelector('#edit_position');
-    roleSelect.innerHTML = html;
-  });
-});
+//     fetch("/payslip/admin/function_php/fetch_roles.php", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/x-www-form-urlencoded" },
+//       body: `department_id=${departmentId}`,
+//     })
+//       .then((res) => res.text())
+//       .then((html) => {
+//         const roleSelect = document.querySelector("#edit_position");
+//         roleSelect.innerHTML = html;
+//       });
+//   });
