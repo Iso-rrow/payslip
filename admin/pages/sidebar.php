@@ -270,7 +270,7 @@ if (isset($_SESSION['employee_id'])) {
 							<div class="menu-sub menu-sub-accordion">
 								<div class="menu-item">
 									<!--begin:All Requests-->
-									<a class="menu-link" href="index.php?pages=admin_requests">
+									<a class="menu-link" href="admin?pages=request">
 										<span class="menu-bullet">
 											<span class="bullet bullet-dot"></span>
 										</span>

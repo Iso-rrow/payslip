@@ -98,7 +98,7 @@ License: For each use you must have a valid license purchased only from above li
 					<!--end::Logo-->
 					<!--begin::Title-->
 					<h2 class="text-white ki-text-bold fw-2 fs-3 m-0">Let's Transform your Idea into Reality</h2>
-					<!--end::Title-->
+ 					<!--end::Title-->
 				</div>
 				<!--begin::Aside-->
 			</div>

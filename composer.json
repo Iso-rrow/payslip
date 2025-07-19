@@ -3,6 +3,7 @@
         "sendinblue/api-v3-sdk": "^8.4",
         "barryvdh/laravel-dompdf": "^3.1",
         "phpmailer/phpmailer": "^6.10",
-        "vlucas/phpdotenv": "^5.6"
+        "vlucas/phpdotenv": "^5.6",
+        "phpoffice/phpspreadsheet": "^4.4"
     }
 }

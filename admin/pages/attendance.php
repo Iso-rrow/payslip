@@ -168,15 +168,16 @@ if ($result && $result->num_rows > 0) {
       </div>
       <div class="modal-body">
         <input type="hidden" name="employee_id" id="payslip-employee-id">
+
+        <!-- Date Range Picker -->
         <div class="mb-3">
-          <label>From Date</label>
-          <input type="date" name="start_date" class="form-control" required>
-        </div>
-        <div class="mb-3">
-          <label>To Date</label>
-          <input type="date" name="end_date" class="form-control" required>
+          <label>Date Range:</label>
+          <input type="text" id="dateRangePicker" class="form-control" placeholder="Select date range" required>
+          <input type="hidden" name="start_date">
+          <input type="hidden" name="end_date">
         </div>
       </div>
+
       <div class="modal-footer">
         <button type="submit" class="btn btn-success">Generate</button>
       </div>
@@ -184,11 +185,35 @@ if ($result && $result->num_rows > 0) {
   </div>
 </div>
 
+
+
 <!-- JS Section -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    flatpickr("#dateRangePicker", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      onClose: function (selectedDates) {
+        if (selectedDates.length === 2) {
+          const [start, end] = selectedDates;
+          document.querySelector("input[name='start_date']").value = flatpickr.formatDate(start, "Y-m-d");
+          document.querySelector("input[name='end_date']").value = flatpickr.formatDate(end, "Y-m-d");
+        }
+      }
+    });
+  });
+
+
+
+
+
 $(document).on('click', '.payslip-btn', function () {
     const employeeId = $(this).data('employee');
     $('#payslip-employee-id').val(employeeId);
