@@ -285,8 +285,7 @@ try {
         $logStmt->bind_param('s', $email);
         $logStmt->execute();
         $logStmt->close();
-
-        echo json_encode(['success' => true, 'message' => 'Employee and user account created! OTP sent via email.']);
+        echo json_encode(['success' => true]);
     } catch (Exception $e) {
         // Even if email fails, log attempt for rate limiting
         $logStmt = $conn->prepare("INSERT INTO email_logs (email) VALUES (?)");
@@ -296,7 +295,7 @@ try {
 
         echo json_encode([
             'success' => true,
-            'message' => 'Employee/user created, but email could not be sent.',
+            
             'mail_error' => $mail->ErrorInfo
         ]);
     }

@@ -23,12 +23,13 @@ var EmployeeDatatableServerSide = (function () {
         dataSrc: "data",
       },
       columns: [
-  { data: "employee_id" }, // checkbox
-  {
-    data: null,
-    render: function (data, type, row) {
-      const imageUrl = row.img_name || '/payslip/uploads/employees/default.jpg';
-      return `
+        { data: "employee_id" }, // checkbox
+        {
+          data: null,
+          render: function (data, type, row) {
+            const imageUrl =
+              row.img_name || "/payslip/uploads/employees/default.jpg";
+            return `
         <div class="d-flex align-items-center justify-content-center">
           <div class="symbol symbol-25px me-2">
             <img src="${imageUrl}" alt="Profile" class="rounded-circle border" 
@@ -37,15 +38,15 @@ var EmployeeDatatableServerSide = (function () {
           <span>${row.auto_employee_id}</span>
         </div>
       `;
-    }
-  },
-  { data: "last_name" },
-  { data: "first_name" },
-  { data: "department" },
-  { data: "position" },
-  { data: "hire_date" },
-  { data: null } // action buttons rendered separately
-],
+          },
+        },
+        { data: "last_name" },
+        { data: "first_name" },
+        { data: "department" },
+        { data: "position" },
+        { data: "hire_date" },
+        { data: null }, // action buttons rendered separately
+      ],
 
       columnDefs: [
         {
@@ -200,25 +201,24 @@ var EmployeeDatatableServerSide = (function () {
   };
 
   function formatDateForInput(dateStr) {
-  if (!dateStr) return ''; 
+    if (!dateStr) return "";
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    return dateStr;
-  }
-
-  const parts = dateStr.split(/[-/]/);
-  if (parts.length === 3) {
-    const [part1, part2, part3] = parts;
-    if (parseInt(part1) > 31) {
-      return `${part1}-${part2.padStart(2, '0')}-${part3.padStart(2, '0')}`;
-    } else {
-      return `${part3}-${part1.padStart(2, '0')}-${part2.padStart(2, '0')}`;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr;
     }
+
+    const parts = dateStr.split(/[-/]/);
+    if (parts.length === 3) {
+      const [part1, part2, part3] = parts;
+      if (parseInt(part1) > 31) {
+        return `${part1}-${part2.padStart(2, "0")}-${part3.padStart(2, "0")}`;
+      } else {
+        return `${part3}-${part1.padStart(2, "0")}-${part2.padStart(2, "0")}`;
+      }
+    }
+
+    return "";
   }
-
-  return '';
-}
-
 
   // 5. Edit Employee
   var handleEditRows = function () {
@@ -357,37 +357,61 @@ var EmployeeDatatableServerSide = (function () {
                 data.religion || "";
 
               const deptSelect = document.querySelector("#edit_department");
-                if (deptSelect && data.department) {
-                  deptSelect.value = data.department;
-                }
+              if (deptSelect && data.department) {
+                deptSelect.value = data.department;
+              }
 
-                if (data.department) {
-                  fetch("/payslip/admin/function_php/fetch_roles.php", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                    body: `department_id=${data.department}`,  // Use `data.department` here
+              if (data.department_id) {
+                fetch("/payslip/admin/function_php/fetch_roles.php", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  body: `department_id=${data.department_id}`,
+                })
+                  .then((res) => res.text())
+                  .then((html) => {
+                    const roleSelect = document.querySelector("#edit_position");
+                    const tempContainer = document.createElement("div");
+                    tempContainer.innerHTML = html;
+
+                    const allOptions = Array.from(
+                      tempContainer.querySelectorAll("option")
+                    );
+
+                    // Filter options by department_id using data-department-id
+                    const filteredOptions = allOptions.filter(
+                      (opt) =>
+                        opt.dataset.departmentId === String(data.department_id)
+                    );
+
+                    // Optional: Keep default option like "Select Role"
+                    const defaultOption = allOptions.find(
+                      (opt) => opt.value === ""
+                    );
+
+                    // Clear and rebuild the dropdown
+                    roleSelect.innerHTML = "";
+                    if (defaultOption) roleSelect.appendChild(defaultOption);
+                    filteredOptions.forEach((opt) =>
+                      roleSelect.appendChild(opt)
+                    );
+
+                    // Set selected role
+                    const roleIdStr = String(data.role_id);
+                    const match = filteredOptions.find(
+                      (opt) => opt.value === roleIdStr
+                    );
+                    if (match) {
+                      roleSelect.value = roleIdStr;
+                    } else {
+                      console.warn(
+                        `Role ID ${roleIdStr} not found for department ${data.department_id}.`
+                      );
+                    }
                   })
-                    .then((res) => res.text())
-                    .then((html) => {
-                      const roleSelect = document.querySelector("#edit_position");
-                      roleSelect.innerHTML = html;
-
-                      requestAnimationFrame(() => {
-                        const roleIdStr = String(data.position);
-                        const optionToSelect = roleSelect.querySelector(
-                          `option[value="${roleIdStr}"]`
-                        );
-                        if (optionToSelect) {
-                          roleSelect.value = roleIdStr;
-                        } else {
-                          console.warn(`Role ID ${roleIdStr} not found in options.`);
-                        }
-                      });
-                    });
-                }
-
+                  .catch((err) => console.error("Error loading roles:", err));
+              }
 
               const docPreviewContainer = document.querySelector(
                 "#edit_documents_preview"
@@ -420,9 +444,6 @@ var EmployeeDatatableServerSide = (function () {
         });
       });
   };
-
-
-
 
   // 6. View Employee
   var handleViewRows = function () {
