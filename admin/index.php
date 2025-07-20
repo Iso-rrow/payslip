@@ -754,6 +754,7 @@ if (!isset($_SESSION['user_id'])) {
 							<?php
 							if (isset($_GET['pages'])) {
 								$pages = $_GET['pages'];
+								$selectedDepartment = $_GET['department'] ?? null;
 								include 'pages/' . $pages . '.php';
 							} else {
 								$page = 'Dashboard';

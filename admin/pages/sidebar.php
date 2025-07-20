@@ -22,6 +22,17 @@ if (isset($_SESSION['employee_id'])) {
         error_log("Database connection is not set.");
     }
 }
+
+
+$departments = [];
+if (isset($conn)) {
+    $deptResult = $conn->query("SELECT * FROM departments ORDER BY name ASC");
+    if ($deptResult && $deptResult->num_rows > 0) {
+        while ($deptRow = $deptResult->fetch_assoc()) {
+            $departments[] = $deptRow;
+        }
+    }
+}
 ?>
 
 
@@ -102,67 +113,49 @@ if (isset($_SESSION['employee_id'])) {
 						</div>
 						<!--end:Menu sub-->
 					</div>
-					<!--begin:Employee Management-->
-					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
-						<!--begin:Menu link-->
-						<span class="menu-link">
-							<span class="menu-icon">
-								<i class="ki-duotone ki-address-book fs-1">
-									<span class="path1"></span>
-									<span class="path2"></span>
-									<span class="path3"></span>
-								</i>
-							</span>
-							<span class="menu-title">Employee Management</span>
-							<span class="menu-arrow"></span>
-						</span>
-						<!--end:Menu link-->
-						<!--begin: Menu-->
-						<div class="menu-sub menu-sub-accordion">
-							<!--begin: Departments-->
-							<div class="menu-item">
-								<!--begin:All Employees-->
-								<a class="menu-link" href="admin?pages=employee">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
+					<!--begin: Menu-->
+							<!--begin:Employee Management-->
+							<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+								<!--begin:Menu link-->
+								<span class="menu-link">
+									<span class="menu-icon">
+										<i class="ki-duotone ki-address-book fs-1">
+											<span class="path1"></span>
+											<span class="path2"></span>
+											<span class="path3"></span>
+										</i>
 									</span>
-									<span class="menu-title">All</span>
-								</a>
-								<!--end:All Employees-->
-								<!-- begin: HR -->
-								<a class="menu-link" href="">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">HR Department</span>
-								</a>
-								<!-- end: HR -->
-								<!-- begin: IT -->
-								<a class="menu-link" href="">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">IT Department</span>
-								</a>
-								<!-- end: IT -->
-								<!-- begin: Sales -->
-								<a class="menu-link" href="">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">Sales Department</span>
-								</a>
-								<!-- end: Sales -->
-								<!-- begin: Operation -->
-								<a class="menu-link" href="">
-									<span class="menu-bullet">
-										<span class="bullet bullet-dot"></span>
-									</span>
-									<span class="menu-title">Operation Department</span>
-								</a>
-								<!-- end: Operation -->
+									<span class="menu-title">Employee Management</span>
+									<span class="menu-arrow"></span>
+								</span>
+								<!--end:Menu link-->
+
+								<!--begin: Menu-->
+								<div class="menu-sub menu-sub-accordion">
+									<!--begin: Departments-->
+									<div class="menu-item">
+										<!--begin:All Employees-->
+										<a class="menu-link" href="admin?pages=employee">
+											<span class="menu-bullet">
+												<span class="bullet bullet-dot"></span>
+											</span>
+											<span class="menu-title">All</span>
+										</a>
+										<!--end:All Employees-->
+
+										<!--begin: Dynamic Departments from DB-->
+										<?php foreach ($departments as $dept): ?>
+											<a class="menu-link" href="admin?pages=employee&department=<?= urlencode($dept['name']) ?>">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title"><?= htmlspecialchars($dept['name']) ?></span>
+											</a>
+										<?php endforeach; ?>
+										<!--end: Dynamic Departments-->
 							</div>
 							<!--end: Departments-->
+
 							<!-- begin: Show more -->
 							<!-- <div class="menu-inner flex-column collapse" id="kt_app_sidebar_menu_dashboards_collapse">
 							</div>

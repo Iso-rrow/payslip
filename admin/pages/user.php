@@ -124,7 +124,6 @@
                     <div class="col-md-12">
                         <label class="form-label">Role</label>
                         <select class="form-select" id="edit_role" name="role" required>
-                            <option value="admin">Admin</option>
                             <option value="hr">HR</option>
                             <option value="employee">Employee</option>
                         </select>

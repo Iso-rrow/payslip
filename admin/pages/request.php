@@ -1,5 +1,6 @@
 <?php
 $pages = "File Request";
+
 include __DIR__ . '/../../database/connect.php';
 ?>
 <!-- Toolbar Header -->
@@ -112,23 +113,23 @@ include __DIR__ . '/../../database/connect.php';
                     <td><?= htmlspecialchars($row['status']) ?></td>
                     <td>
                         <?php if ($row['department_approval_status'] === 'Pending'): ?>
-                            <form action="./approve_request.php" method="POST" class="d-inline">
+                            <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">
                                 <input type="hidden" name="action" value="approve">
-                                <button type="submit" class="btn btn-sm btn-success">Dept Approve</button>
+                                <button type="submit" class="btn btn-sm btn-success">Approve</button>
                             </form>
-                            <form action="./approve_request.php" method="POST" class="d-inline">
+                            <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">
                                 <input type="hidden" name="action" value="decline">
-                                <button type="submit" class="btn btn-sm btn-danger">Dept Decline</button>
+                                <button type="submit" class="btn btn-sm btn-danger">Decline</button>
                             </form>
                         <?php elseif ($row['department_approval_status'] === 'Approved' && $row['final_approval_status'] === 'Pending'): ?>
-                            <form action="./approve_request.php" method="POST" class="d-inline">
+                            <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">
                                 <input type="hidden" name="action" value="approve">
                                 <button type="submit" class="btn btn-sm btn-primary">Final Approve</button>
                             </form>
-                            <form action="./approve_request.php" method="POST" class="d-inline">
+                            <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">
                                 <input type="hidden" name="action" value="decline">
                                 <button type="submit" class="btn btn-sm btn-warning">Final Decline</button>

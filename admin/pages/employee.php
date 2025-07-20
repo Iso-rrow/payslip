@@ -3,8 +3,27 @@ include __DIR__ . '/../../database/connect.php';
 $pages = "Employee Management";
 
 $employees = [];
-$sql = "SELECT * FROM employees ORDER BY last_name ASC";
-$result = $conn->query($sql);
+
+$departmentFilter = '';
+$params = [];
+
+$selectedDepartment = $_GET['department'] ?? 'All Departments';
+
+if (!empty($selectedDepartment) && $selectedDepartment !== 'All Departments') {
+    $departmentFilter = " WHERE department = ? ";
+    $params[] = $selectedDepartment;
+}
+
+
+$sql = "SELECT * FROM employees" . $departmentFilter . " ORDER BY last_name ASC";
+$stmt = $conn->prepare($sql);
+
+if (!empty($params)) {
+    $stmt->bind_param("s", ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $employees[] = $row;
@@ -290,13 +309,14 @@ if ($result && $result->num_rows > 0) {
 <!--end::Group actions-->
 
 <div class="container-fluid">
+    
     <table id="kt_datatable_example_1" class="table table-sm table-row-dashed fs-7 gy-3">
         <thead>
             <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
                 <th class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                               data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                     </div>
                 </th>
                 <th>Auto ID</th>
@@ -310,18 +330,19 @@ if ($result && $result->num_rows > 0) {
         </thead>
 
         <tbody class="text-gray-600 fw-semibold">
-            <?php foreach ($employees as $employee): ?>
+        <?php foreach ($employees as $employee): ?>
             <tr class="text-start text-center fs-7 gs-0 my-2">
                 <td class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" value="<?= $employee['employee_id'] ?>" />
                     </div>
                 </td>
-
+                    
                 <!-- Auto ID with profile picture -->
                 <td>
                     <div class="d-flex align-items-center justify-content-center">
                         <?php
+                        $selectedDepartment = $_GET['department'] ?? 'All Departments';
                         $imagePath = '../../uploads/employees/';
                         $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'default.jpg';
                         $imgFullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath . $imgFile;
@@ -332,8 +353,9 @@ if ($result && $result->num_rows > 0) {
                         }
                         ?>
                         <div class="symbol symbol-25px me-2">
-                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>" alt="Profile"
-                                class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
+                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>"
+                                 alt="Profile" class="rounded-circle border"
+                                 style="width: 25px; height: 25px; object-fit: cover;">
                         </div>
                         <span><?= htmlspecialchars($employee['employee_id']) ?></span>
                     </div>
@@ -341,18 +363,17 @@ if ($result && $result->num_rows > 0) {
 
                 <td><?= htmlspecialchars($employee['last_name']) ?></td>
                 <td><?= htmlspecialchars($employee['first_name']) ?></td>
-                <td><?= htmlspecialchars($employee['position']) ?></td>
                 <td><?= htmlspecialchars($employee['department']) ?></td>
+                <td><?= htmlspecialchars($employee['position']) ?></td>
+
                 <td><?= htmlspecialchars(date('F d, Y', strtotime($employee['date_hired']))) ?></td>
 
                 <td>
-                    <button class="btn btn-sm btn-primary edit-btn"
-                        data-id="<?= $employee['employee_id'] ?>">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn"
-                        data-id="<?= $employee['employee_id'] ?>">Delete</button>
+                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $employee['employee_id'] ?>">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $employee['employee_id'] ?>">Delete</button>
                 </td>
             </tr>
-            <?php endforeach; ?>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>
