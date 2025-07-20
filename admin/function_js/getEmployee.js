@@ -518,6 +518,7 @@ var EmployeeDatatableServerSide = (function () {
                 if (el) el.value = emp[id] || "";
               });
 
+
               const docFields = [
                 "sss_file",
                 "philhealth_file",

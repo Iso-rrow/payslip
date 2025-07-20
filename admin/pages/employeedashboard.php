@@ -106,7 +106,7 @@ $att_result = $att_stmt->get_result();
 <!-- Request Modal -->
 <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form class="modal-content" method="POST" action="submit_request.php">
+    <form class="modal-content" method="POST" action="admin/pages/submit_request.php">
       <div class="modal-header">
         <h5 class="modal-title" id="requestModalLabel">Request a File</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
