@@ -45,26 +45,41 @@ include __DIR__ . '/../../database/connect.php';
         </tr>
         </thead>
         <tbody class="text-gray-600 fw-semibold">
-        <?php
-        $query = "SELECT employee_id, first_name, last_name, department, position, salary_rate FROM employees";
-        $result = $conn->query($query);
-        while ($row = $result->fetch_assoc()):
-        ?>
-            <tr class="text-start text-center fs-7 gs-0 my-2">
-                <td class="w-10px pe-2">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" />
-                    </div>
-                </td>
-                <td><?= htmlspecialchars($row['employee_id']) ?></td>
-                <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
-                <td><?= htmlspecialchars($row['department']) ?></td>
-                <td><?= htmlspecialchars($row['position']) ?></td>
-                <td>₱<?= number_format($row['salary_rate'], 2) ?></td>
-                <td>Regular</td>
-                <td><button class="btn btn-sm btn-info" disabled>View</button></td>
-            </tr>
-        <?php endwhile; ?>
+           <?php
+                $query = "
+                    SELECT 
+                        e.employee_id,
+                        e.first_name,
+                        e.last_name,
+                        d.name AS department_name,
+                        r.name AS position_name,
+                        e.salary_rate
+                    FROM 
+                        employees e
+                    LEFT JOIN departments d ON e.department = d.id
+                    LEFT JOIN roles r ON e.position = r.id
+                ";
+                $result = $conn->query($query);
+
+                while ($row = $result->fetch_assoc()) :
+                ?>
+                <tr class="text-start text-center fs-7 gs-0 my-2">
+                    <td class="w-10px pe-2">
+                        <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
+                            <input class="form-check-input" type="checkbox" />
+                        </div>
+                    </td>
+                    <td><?= htmlspecialchars($row['employee_id']) ?></td>
+                    <td><?= htmlspecialchars($row['first_name'] . ' ' . $row['last_name']) ?></td>
+                    <td><?= htmlspecialchars($row['department_name']) ?></td>
+                    <td><?= htmlspecialchars($row['position_name']) ?></td>
+                    <td>₱<?= number_format($row['salary_rate'], 2) ?></td>
+                    <td>Regular</td>
+                    <td><button class="btn btn-sm btn-info" disabled>View</button></td>
+                </tr>
+                <?php endwhile; ?>
+
+
         </tbody>
     </table>
 </div>

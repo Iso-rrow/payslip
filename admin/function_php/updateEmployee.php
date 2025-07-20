@@ -11,6 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    // Validate and sanitize hire date
+    $hire_date = trim($data['hire_date'] ?? '');
+    if (empty($hire_date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $hire_date)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid or missing hire date']);
+        exit;
+    }
+
     // Handle image upload
     if (!empty($_FILES['employee_image']['name'])) {
         $uploadImageDir = '../../uploads/employees/';
@@ -74,16 +81,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['last_name'],
         $data['email'],
         $data['contact_number'],
-        intval($data['department']),    // Store department_id
-        intval($data['position']),      // Store role_id
-        $data['hire_date'],
+        intval($data['department']),
+        intval($data['position']),
+        $hire_date,
         $scheduled_time_in,
         $scheduled_time_out,
         $data['sss_number'],
         $data['philhealth_number'],
         $data['pagibig_number'],
         $data['tin_number'],
-        (float) $data['salary_rate'],
+        (float)$data['salary_rate'],
         $data['payment_method'],
         $data['address'],
         $data['emergency_name'],
@@ -92,14 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['sex'],
         $data['citizenship'],
         $data['religion'],
-        (float) $data['height'],
-        (float) $data['weight']
+        (float)$data['height'],
+        (float)$data['weight']
     ];
-
-    if (!empty($hire_date) && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $hire_date)) {
-    echo json_encode(['success' => false, 'message' => 'Invalid hire date format']);
-    exit;
-}
 
     if ($imageFileName !== null) {
         $query .= ", img_name = ?";
@@ -115,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $query .= " WHERE employee_id = ?";
     $types .= "i";
-    $params[] = (int) $data['employee_id'];
+    $params[] = (int)$data['employee_id'];
 
     $stmt = $conn->prepare($query);
     if (!$stmt) {

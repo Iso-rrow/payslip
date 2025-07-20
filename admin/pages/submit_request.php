@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 
-    header('Location: /payslip/admin/pages/employeedashboard.php');
+  header("Location:../index.php?pages=request");
     exit;
 }
 ?>

@@ -122,7 +122,7 @@ if (!empty($_FILES['img_name']['name'])) {
     $targetFile = $uploadDir . $uniqueFileName;
 
     if (move_uploaded_file($_FILES['img_name']['tmp_name'], $targetFile)) {
-        $img_name = str_replace('../../', '/h_r_3/', $targetFile);
+        $img_name = str_replace('../../', '/payslip/', $targetFile);
     }
 }
 
@@ -144,7 +144,7 @@ if (!empty($_FILES['documents']['name'][0])) {
         $targetFile = $uploadDir . time() . '_' . $fileName;
 
         if (move_uploaded_file($tmp_name, $targetFile)) {
-            $fileNames[] = str_replace('../../', '/h_r_3/', $targetFile);
+            $fileNames[] = str_replace('../../', '/payslip/', $targetFile);
             
         }
     }
@@ -163,7 +163,7 @@ function uploadSingleFile($fileField, $uploadDir = '../../uploads/documents/') {
         $targetFile = $uploadDir . $uniqueFileName;
 
         if (move_uploaded_file($_FILES[$fileField]['tmp_name'], $targetFile)) {
-            return str_replace('../../', '/h_r_3/', $targetFile);
+            return str_replace('../../', '/payslip/', $targetFile);
         }
     }
     return null;

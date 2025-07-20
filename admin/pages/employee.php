@@ -338,41 +338,6 @@ if ($result && $result->num_rows > 0) {
                     </div>
                 </td>
                     
-                <!-- Auto ID with profile picture -->
-                <td>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <?php
-                        $selectedDepartment = $_GET['department'] ?? 'All Departments';
-                        $imagePath = '../../uploads/employees/';
-                        $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'default.jpg';
-                        $imgFullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath . $imgFile;
-
-                        // Fallback if file not found
-                        if (!file_exists($imgFullPath)) {
-                            $imgFile = 'default.jpg';
-                        }
-                        ?>
-                        <div class="symbol symbol-25px me-2">
-                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>"
-                                 alt="Profile" class="rounded-circle border"
-                                 style="width: 25px; height: 25px; object-fit: cover;">
-                        </div>
-                        <span><?= htmlspecialchars($employee['employee_id']) ?></span>
-                    </div>
-                </td>
-
-                <td><?= htmlspecialchars($employee['last_name']) ?></td>
-                <td><?= htmlspecialchars($employee['first_name']) ?></td>
-                <td><?= htmlspecialchars($employee['department']) ?></td>
-                <td><?= htmlspecialchars($employee['position']) ?></td>
-
-                <td><?= htmlspecialchars(date('F d, Y', strtotime($employee['date_hired']))) ?></td>
-
-                <td>
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $employee['employee_id'] ?>">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $employee['employee_id'] ?>">Delete</button>
-                </td>
-            </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
@@ -479,8 +444,8 @@ if ($result && $result->num_rows > 0) {
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Date Hired EX: 19990128-1999/01/28</label>
-                        <input type="text" class="form-control" id="edit_hire_date" name="hire_date">
+                        <label class="form-label">Date Hired</label>
+                        <input type="date" name="hire_date" id="edit_hire_date"  class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Scheduled Time In</label>
@@ -759,4 +724,7 @@ const addEmployeeModal = document.querySelector('#addEmployeeModal');
 addEmployeeModal.addEventListener('shown.bs.modal', () => {
     document.querySelector('#employeeId').value = generateEmployeeID();
 });
+
+
+
 </script>
