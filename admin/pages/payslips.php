@@ -43,21 +43,6 @@ include __DIR__ . '/../../database/connect.php';
                 <th>Type of Employee</th>
                 <th>Action</th>
             </tr>
-            <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
-                <th class="w-10px pe-2">
-                    <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                        <input class="form-check-input" type="checkbox" data-kt-check="true"
-                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
-                    </div>
-                </th>
-                <th>Employee ID</th>
-                <th>Name</th>
-                <th>Department</th>
-                <th>Role</th>
-                <th>Gross Pay</th>
-                <th>Type of Employee</th>
-                <th>Action</th>
-            </tr>
         </thead>
         <tbody class="text-gray-600 fw-semibold">
             <?php
@@ -101,9 +86,6 @@ include __DIR__ . '/../../database/connect.php';
 
 <!-- Button to trigger bulk generation -->
 <div class="text-end my-4">
-    <button class="btn btn-primary btn-sm" id="generateSelectedPayslips">
-        Generate for Selected
-    </button>
     <button class="btn btn-primary btn-sm" id="generateSelectedPayslips">
         Generate for Selected
     </button>
