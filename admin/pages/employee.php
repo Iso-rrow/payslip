@@ -218,7 +218,6 @@ if ($result && $result->num_rows > 0) {
                                 <option value="" disabled selected>Select Method</option>
                                 <option value="Bank Transfer">Bank Transfer</option>
                                 <option value="Check">Check</option>
-                                <option value="Cash">Cash</option>
                             </select>
                         </div>
                         <div class="col-md-6 d-none" id="bankDetails">
@@ -480,10 +479,13 @@ if ($result && $result->num_rows > 0) {
                         <input type="number" class="form-control" id="edit_salary_rate" name="salary_rate" step="0.01">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Payment Method</label>
-                        <input type="text" class="form-control" id="edit_payment_method" name="payment_method">
+                    <label class="form-label">Payment Method</label>
+                    <select id="edit_payment_method" name="payment_method" class="form-select" required>
+                        <option value="" disabled>Select Method</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Check">Check</option>
+                    </select>
                     </div>
-
                     <!-- Address -->
                     <div class="col-md-12">
                         <label class="form-label">Address</label>

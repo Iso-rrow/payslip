@@ -195,7 +195,7 @@ try {
 
 
    $stmt1->bind_param(
-    "ssssssssssssssdssssssssddssssssss",
+    "sssssssssssssssssssssssddssssssss",
     $auto_employee_id,
     $img_name,
     $first_name,

@@ -425,9 +425,9 @@ if (isset($conn)) {
 				
 		<!--begin::Wrapper-->
 		<div class="d-flex align-items-center">
-			<div class="symbol symbol-circle symbol-40px">
-				<img src="uploads/employees/<?php echo htmlspecialchars($emp_img); ?>" alt="photo" />
-			</div>
+			<!-- <div class="symbol symbol-circle symbol-40px">
+				<img src="/uploads/employees/<?php echo htmlspecialchars($emp_img); ?>" alt="photo" />
+			</div> -->
 			<div class="ms-2">
 				<a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold lh-1">
 					<?php echo htmlspecialchars($emp_name); ?>

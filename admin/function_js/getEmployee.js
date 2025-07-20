@@ -199,26 +199,17 @@ var EmployeeDatatableServerSide = (function () {
       });
   };
 
+  // Helper function to format date into YYYY-MM-DD
   function formatDateForInput(dateStr) {
-  if (!dateStr) return ''; 
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-    return dateStr;
-  }
-
-  const parts = dateStr.split(/[-/]/);
-  if (parts.length === 3) {
-    const [part1, part2, part3] = parts;
-    if (parseInt(part1) > 31) {
-      return `${part1}-${part2.padStart(2, '0')}-${part3.padStart(2, '0')}`;
-    } else {
-      return `${part3}-${part1.padStart(2, '0')}-${part2.padStart(2, '0')}`;
+    const date = new Date(dateStr);
+    if (!isNaN(date.getTime())) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const dd = String(date.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     }
+    return "";
   }
-
-  return '';
-}
-
 
   // 5. Edit Employee
   var handleEditRows = function () {
@@ -422,8 +413,7 @@ var EmployeeDatatableServerSide = (function () {
   };
 
 
-
-
+  
   // 6. View Employee
   var handleViewRows = function () {
     document
