@@ -317,7 +317,6 @@ if ($result && $result->num_rows > 0) {
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" data-kt-check="true"
                             data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
-                        data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                     </div>
                 </th>
                 <th>Auto ID</th>
@@ -330,17 +329,51 @@ if ($result && $result->num_rows > 0) {
             </tr>
         </thead>
 
-        <tbody class="text-gray-600 fw-semibold">
-            <?php foreach ($employees as $employee): ?>
-            <?php foreach ($employees as $employee): ?>
+         <tbody class="text-gray-600 fw-semibold">
+        <?php foreach ($employees as $employee): ?>
             <tr class="text-start text-center fs-7 gs-0 my-2">
                 <td class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" value="<?= $employee['employee_id'] ?>" />
                     </div>
                 </td>
+                    
+                <!-- Auto ID with profile picture -->
+                <td>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <?php
+                        $selectedDepartment = $_GET['department'] ?? 'All Departments';
+                        $imagePath = '../../uploads/employees/';
+                        $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'default.jpg';
+                        $imgFullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath . $imgFile;
 
-                <?php endforeach; ?>
+                        // Fallback if file not found
+                        if (!file_exists($imgFullPath)) {
+                            $imgFile = 'default.jpg';
+                        }
+                        ?>
+                        <div class="symbol symbol-25px me-2">
+                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>"
+                                 alt="Profile" class="rounded-circle border"
+                                 style="width: 25px; height: 25px; object-fit: cover;">
+                        </div>
+                        <span><?= htmlspecialchars($employee['employee_id']) ?></span>
+                    </div>
+                </td>
+
+                <td><?= htmlspecialchars($employee['last_name']) ?></td>
+                <td><?= htmlspecialchars($employee['first_name']) ?></td>
+                <td><?= htmlspecialchars($employee['department']) ?></td>
+                <td><?= htmlspecialchars($employee['position']) ?></td>
+
+                <td><?= htmlspecialchars(date('F d, Y', strtotime($employee['date_hired']))) ?></td>
+
+                <td>
+                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $employee['employee_id'] ?>">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $employee['employee_id'] ?>">Delete</button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
         </tbody>
     </table>
 </div>
