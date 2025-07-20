@@ -1,7 +1,7 @@
 <?php
-include __DIR__ . '/../../database/connect.php';
-
 if (isset($_POST['department_id'])) {
+    include "../../database/connect.php"; // <-- Make sure DB connection is here
+
     $dept_id = intval($_POST['department_id']);
     $stmt = $conn->prepare("SELECT id, name FROM roles WHERE department_id = ?");
     $stmt->bind_param("i", $dept_id);
@@ -12,4 +12,6 @@ if (isset($_POST['department_id'])) {
     while ($row = $result->fetch_assoc()) {
         echo '<option value="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['name']) . '</option>';
     }
+
+    $stmt->close();
 }

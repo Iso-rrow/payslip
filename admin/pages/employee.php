@@ -308,14 +308,16 @@ if ($result && $result->num_rows > 0) {
 <!--end::Group actions-->
 
 <div class="container-fluid">
-    
+
+
     <table id="kt_datatable_example_1" class="table table-sm table-row-dashed fs-7 gy-3">
         <thead>
             <tr class="text-start text-gray-500 text-center fw-bold fs-7 text-uppercase gs-0">
                 <th class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" data-kt-check="true"
-                               data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                            data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
+                        data-kt-check-target="#kt_datatable_example_1 .form-check-input" value="1" />
                     </div>
                 </th>
                 <th>Auto ID</th>
@@ -329,15 +331,16 @@ if ($result && $result->num_rows > 0) {
         </thead>
 
         <tbody class="text-gray-600 fw-semibold">
-        <?php foreach ($employees as $employee): ?>
+            <?php foreach ($employees as $employee): ?>
+            <?php foreach ($employees as $employee): ?>
             <tr class="text-start text-center fs-7 gs-0 my-2">
                 <td class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" value="<?= $employee['employee_id'] ?>" />
                     </div>
                 </td>
-                    
-        <?php endforeach; ?>
+
+                <?php endforeach; ?>
         </tbody>
     </table>
 </div>
@@ -439,12 +442,30 @@ if ($result && $result->num_rows > 0) {
                         <label class="form-label">Position / Role</label>
                         <select id="edit_position" name="position" class="form-select" required>
                             <option value="" disabled selected>Select Role</option>
+                            <?php
+                                $positions = $conn->query("SELECT id, name FROM roles");
+                                while ($row = $positions->fetch_assoc()):
+                            ?>
+                            <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
+                            <?php endwhile; ?>
+                            <?php
+                                $positions = $conn->query("SELECT id, name FROM roles");
+                                while ($row = $positions->fetch_assoc()):
+                            ?>
+                            <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
+                            <?php endwhile; ?>
+                            <?php
+                                $positions = $conn->query("SELECT id, name FROM roles");
+                                while ($row = $positions->fetch_assoc()):
+                            ?>
+                            <option value="<?= $row['id'] ?>"><?= htmlspecialchars($row['name']) ?></option>
+                            <?php endwhile; ?>
                         </select>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">Date Hired</label>
-                        <input type="date" name="hire_date" id="edit_hire_date"  class="form-control">
+                        <input type="date" name="hire_date" id="edit_hire_date" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Scheduled Time In</label>
@@ -726,7 +747,4 @@ const addEmployeeModal = document.querySelector('#addEmployeeModal');
 addEmployeeModal.addEventListener('shown.bs.modal', () => {
     document.querySelector('#employeeId').value = generateEmployeeID();
 });
-
-
-
 </script>
