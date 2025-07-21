@@ -1,9 +1,9 @@
 <?php
 if (isset($_POST['department_id'])) {
-    include "../../database/connect.php"; // <-- Make sure DB connection is here
+    include "../../database/connect.php";
 
     $dept_id = intval($_POST['department_id']);
-    $stmt = $conn->prepare("SELECT id, name FROM roles WHERE department_id = ?");
+    $stmt = $conn->prepare("SELECT DISTINCT id, name FROM roles WHERE department_id = ?");
     $stmt->bind_param("i", $dept_id);
     $stmt->execute();
     $result = $stmt->get_result();

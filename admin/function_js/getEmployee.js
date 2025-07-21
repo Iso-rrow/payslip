@@ -362,57 +362,24 @@ var EmployeeDatatableServerSide = (function () {
                 deptSelect.value = data.department;
               }
 
-              if (data.department_id) {
-                fetch("/payslip/admin/function_php/fetch_roles.php", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                  },
-                  body: `department_id=${data.department_id}`,
-                })
-                  .then((res) => res.text())
-                  .then((html) => {
-                    const roleSelect = document.querySelector("#edit_position");
-                    const tempContainer = document.createElement("div");
-                    tempContainer.innerHTML = html;
+             document.querySelector("#edit_department").addEventListener("change", function () {
+  const deptId = this.value;
+  fetch("/payslip/admin/function_php/fetch_roles.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: `department_id=${deptId}`,
+  })
+    .then((res) => res.text())
+    .then((html) => {
+      const roleSelect = document.querySelector("#edit_position");
+      roleSelect.innerHTML = html;
+    })
+    .catch((err) => console.error("Error fetching roles:", err));
+});
 
-                    const allOptions = Array.from(
-                      tempContainer.querySelectorAll("option")
-                    );
 
-                    // Filter options by department_id using data-department-id
-                    const filteredOptions = allOptions.filter(
-                      (opt) =>
-                        opt.dataset.departmentId === String(data.department_id)
-                    );
-
-                    // Optional: Keep default option like "Select Role"
-                    const defaultOption = allOptions.find(
-                      (opt) => opt.value === ""
-                    );
-
-                    // Clear and rebuild the dropdown
-                    roleSelect.innerHTML = "";
-                    if (defaultOption) roleSelect.appendChild(defaultOption);
-                    filteredOptions.forEach((opt) =>
-                      roleSelect.appendChild(opt)
-                    );
-
-                    // Set selected role
-                    const roleIdStr = String(data.role_id);
-                    const match = filteredOptions.find(
-                      (opt) => opt.value === roleIdStr
-                    );
-                    if (match) {
-                      roleSelect.value = roleIdStr;
-                    } else {
-                      console.warn(
-                        `Role ID ${roleIdStr} not found for department ${data.department_id}.`
-                      );
-                    }
-                  })
-                  .catch((err) => console.error("Error loading roles:", err));
-              }
 
               const docPreviewContainer = document.querySelector(
                 "#edit_documents_preview"
