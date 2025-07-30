@@ -22,17 +22,18 @@ if (!$employeeId || !$startDate || !$endDate) {
     exit;
 }
 
-// Fetch employee data and total hours
+// Fetch employee data and total time
 $query = "
     SELECT 
         e.first_name, e.last_name, e.salary_rate,
-        SUM(TIMESTAMPDIFF(SECOND, t.time_in, t.time_out)) AS total_seconds
-    FROM time_logs t
-    JOIN employees e ON t.employee_id = e.employee_id
-    WHERE t.employee_id = ?
-      AND t.date BETWEEN ? AND ?
+        SUM(a.total_time) AS total_hours
+    FROM attendance a
+    JOIN employees e ON a.employee_id = e.employee_id
+    WHERE a.employee_id = ?
+      AND a.date BETWEEN ? AND ?
     GROUP BY e.employee_id
 ";
+
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("iss", $employeeId, $startDate, $endDate);
@@ -46,27 +47,32 @@ if (!$data) {
 }
 
 // Compute time and salary
-$total_hours = round($data['total_seconds'] / 3600, 2);
+$total_time = round($data['total_hours'], 2);
 $salary_rate = $data['salary_rate'];
 
-// Get default values
-$defaults = getPayslipDefaults();
-$sss = floatval($defaults['sss'] ?? 0);
-$pagibig = floatval($defaults['pagibig'] ?? 0);
-$philhealth = floatval($defaults['philhealth'] ?? 0);
-$withholding_tax = floatval($defaults['withholding_tax'] ?? 0);
-$late_deduction = floatval($defaults['late_deduction'] ?? 0);
-$absent_deduction = floatval($defaults['absent_deduction'] ?? 0);
-$allowance = floatval($defaults['allowance'] ?? 0);
-$overtime_pay = floatval($defaults['overtime_pay'] ?? 0);
-$bonus = floatval($defaults['bonus'] ?? 0);
+// Semi-monthly logic setup
+$monthly_work_hours = 8 * 22; // Assuming 22 working days at 8 hours/day
+$monthly_salary = $salary_rate * $monthly_work_hours;
+$semi_monthly_salary = $monthly_salary / 2;
 
-// Salary computation
-$gross_salary = ($total_hours * $salary_rate) + $allowance + $bonus + $overtime_pay;
+// PhilHealth computation (Employee share only: 4% x 0.5)
+$philhealth = ($monthly_salary * 0.04) * 0.5;
+
+// Basic salary is pro-rated if employee did not work full semi-monthly hours
+$expected_hours_in_semi_month = $monthly_work_hours / 2; // 88 hours
+$basic_salary = ($total_time / $expected_hours_in_semi_month) * $semi_monthly_salary;
+
+// Gross salary with allowance, bonus, and overtime
+$gross_salary = $basic_salary + $allowance + $bonus + $overtime_pay;
 $total_deductions = $withholding_tax + $sss + $pagibig + $philhealth + $late_deduction + $absent_deduction;
 $net_salary = $gross_salary - $total_deductions;
 
-// HTML for PDF
+// Salary computation
+$gross_salary = ($total_time * $salary_rate) + $allowance + $bonus + $overtime_pay;
+$total_deductions = $withholding_tax + $sss + $pagibig + $philhealth + $late_deduction + $absent_deduction;
+$net_salary = $gross_salary - $total_deductions;
+
+
 $html = '
 <style>
     body { font-family: Arial, sans-serif; }
@@ -81,7 +87,7 @@ $html = '
 <p><strong>Employee:</strong> ' . htmlspecialchars($data['first_name'] . ' ' . $data['last_name']) . '</p>
 <p><strong>Pay Period:</strong> ' . htmlspecialchars($startDate) . ' to ' . htmlspecialchars($endDate) . '</p>
 <p><strong>ID Number:</strong> ' . htmlspecialchars($employeeId) . '</p>
-<p><strong>Pay Cycle:</strong> Bi-weekly</p>
+<p><strong>Pay Cycle:</strong> Semi-monthly</p>
 
 <table>
     <tr class="section-title">
@@ -92,7 +98,7 @@ $html = '
     </tr>
     <tr>
         <td>Basic Salary</td>
-        <td>' . number_format($total_hours * $salary_rate, 2) . '</td>
+        <td>' . number_format($basic_salary, 2) . '</td>
         <td>Withholding Tax</td>
         <td>' . number_format($withholding_tax, 2) . '</td>
     </tr>

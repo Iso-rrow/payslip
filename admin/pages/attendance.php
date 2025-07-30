@@ -1,6 +1,7 @@
 <?php
 include __DIR__ . '/../../database/connect.php';
 $pages = "Attendance";
+
 $fromDate = $_GET['from_date'] ?? null;
 $toDate = $_GET['to_date'] ?? null;
 $params = [];
@@ -8,60 +9,59 @@ $conditions = [];
 
 $query = "
     SELECT
-        t.id,
-        t.employee_id,
-        CONCAT(e.first_name, ' ', e.last_name) AS name,
-        t.time_in,
-        t.time_out,
-        TIMEDIFF(t.time_out, t.time_in) AS total_time,
-        t.date,
+        a.id,
+        a.employee_id,
+        a.name,
+        a.time_in,
+        a.time_out,
+        a.total_time,
+        a.date,
+        a.late_status,
+        a.late_minutes,
+        a.deduction,
+        a.deduction,
+        a.undertime_deduction,
+        a.remarks,
         e.salary_rate,
         e.img_name
-    FROM time_logs t
-    JOIN employees e ON t.employee_id = e.employee_id
+    FROM attendance a
+    JOIN employees e ON a.employee_id = e.employee_id
 ";
 
-// Add date condition if filter is used
+// Add date filter
 if ($fromDate && $toDate) {
-    $conditions[] = "DATE(t.date) BETWEEN ? AND ?";
+    $conditions[] = "DATE(a.date) BETWEEN ? AND ?";
     $params[] = $fromDate;
     $params[] = $toDate;
 }
 
-// Append WHERE clause if needed
 if (!empty($conditions)) {
-    $query .= " WHERE " . implode(' AND ', $conditions);
+    $query .= " WHERE " . implode(" AND ", $conditions);
 }
 
-$stmt = $conn->prepare($query);
+$query .= " ORDER BY a.date DESC";
 
-// Bind parameters if any
+$stmt = $conn->prepare($query);
 if (!empty($params)) {
-    $types = str_repeat('s', count($params)); // all are strings (dates)
+    $types = str_repeat('s', count($params));
     $stmt->bind_param($types, ...$params);
 }
 
 $stmt->execute();
 $result = $stmt->get_result();
 
-
-// Group data by date
 $groupedData = [];
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $groupedData[$row['date']][] = $row;
-    }
+while ($row = $result->fetch_assoc()) {
+    $groupedData[$row['date']][] = $row;
 }
 ?>
 
 <h2>Attendance</h2>
 
-<!-- Filter Form -->
+<!-- Filter -->
 <div class="card p-4 mb-4">
 <form class="row g-3 align-items-end" method="GET" action="?">
     <input type="hidden" name="pages" value="attendance">
-
     <div class="col-md-3">
         <label for="fromDate" class="form-label">From Date</label>
         <input type="date" id="fromDate" name="from_date" class="form-control" value="<?= $_GET['from_date'] ?? '' ?>">
@@ -72,16 +72,15 @@ if ($result && $result->num_rows > 0) {
     </div>
     <div class="col-md-3">
         <button type="submit" class="btn btn-primary">Filter</button>
-        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+        <a href="?pages=attendance" class="btn btn-secondary ms-2">Reset</a>
     </div>
 </form>
 </div>
 
-<!-- Attendance Tables Grouped by Date -->
 <?php if (!empty($groupedData)): ?>
     <?php foreach ($groupedData as $date => $records): ?>
         <div class="card mb-5">
-            <div class="card-header  bg-light mt-3">
+            <div class="card-header bg-light mt-3">
                 <h5 class="mb-0">Attendance Table for <?= date('F d, Y', strtotime($date)) ?></h5>
             </div>
             <div class="card-body p-0">
@@ -93,6 +92,10 @@ if ($result && $result->num_rows > 0) {
                             <th>Time In</th>
                             <th>Time Out</th>
                             <th>Total Time</th>
+                            <th>Late Minutes</th>
+                            <th>Deduction (₱)</th>
+                            <th>Undertime Deduction (₱)</th>
+                            <th>Remarks</th>
                             <th>Date</th>
                             <th>Action</th>
                         </tr>
@@ -101,16 +104,18 @@ if ($result && $result->num_rows > 0) {
                         <?php foreach ($records as $row): ?>
                             <tr>
                                 <td>
-                                    <div class="symbol symbol-25px mt-1">
-                                        <img src="<?= htmlspecialchars($row['img_name'] ?? '/payslip/uploads/employees/default.jpg') ?>"
-                                            alt="Profile" class="rounded-circle"
-                                            style="width: 25px; height: 25px; object-fit: cover;">
-                                    </div>
+                                    <img src="<?= htmlspecialchars($row['img_name'] ?? '/payslip/uploads/employees/default.jpg') ?>"
+                                         class="rounded-circle"
+                                         style="width: 25px; height: 25px; object-fit: cover;">
                                 </td>
                                 <td><?= htmlspecialchars($row['name']) ?></td>
-                                <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '' ?></td>
-                                <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '' ?></td>
+                                <td><?= $row['time_in'] ? date('h:i A', strtotime($row['time_in'])) : '—' ?></td>
+                                <td><?= $row['time_out'] ? date('h:i A', strtotime($row['time_out'])) : '—' ?></td>
                                 <td><?= $row['total_time'] ?? '—' ?></td>
+                                <td><?= $row['late_minutes'] !== null ? round($row['late_minutes']) : '—' ?></td>
+                                <td><?= $row['deduction'] !== null ? number_format($row['deduction'], 2) : '—' ?></td>
+                                <td><?= $row['undertime_deduction'] !== null ? number_format($row['undertime_deduction'], 2) : '—' ?></td>
+                                <td><?= $row['remarks'] ?? '—' ?></td>
                                 <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
                                 <td>
                                     <button class="btn btn-sm btn-info payslip-btn"
@@ -129,6 +134,7 @@ if ($result && $result->num_rows > 0) {
 <?php else: ?>
     <p class="text-center text-muted">No attendance records found.</p>
 <?php endif; ?>
+
 
 <!-- Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">

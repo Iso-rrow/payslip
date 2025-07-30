@@ -4,7 +4,7 @@ include __DIR__ . '/../../database/connect.php';
 
 use Dompdf\Dompdf;
 
-
+// Load global default values from a config file
 function getPayslipDefaults() {
     $jsonPath = __DIR__ . '/../pages/get_payslip_defaults.php';
     ob_start();
@@ -13,8 +13,8 @@ function getPayslipDefaults() {
     return json_decode($json, true);
 }
 
+// Get data
 $data = json_decode(file_get_contents("php://input"), true);
-
 $startDate = $data['start_date'] ?? null;
 $endDate = $data['end_date'] ?? null;
 $employees = $data['employees'] ?? [];
@@ -25,8 +25,6 @@ if (!$startDate || !$endDate || empty($employees)) {
 }
 
 $defaults = getPayslipDefaults();
-extract(array_map('floatval', $defaults));
-
 
 $html = '
 <style>
@@ -41,37 +39,47 @@ $html = '
 <p><strong>Pay Period:</strong> ' . htmlspecialchars($startDate) . ' to ' . htmlspecialchars($endDate) . '</p>
 ';
 
+// Function to count working days between two dates (Mon-Fri only)
+function countWorkingDays($startDate, $endDate) {
+    $start = new DateTime($startDate);
+    $end = new DateTime($endDate);
+    $interval = new DateInterval('P1D');
+    $period = new DatePeriod($start, $interval, $end->modify('+1 day'));
+
+    $workdays = 0;
+    foreach ($period as $day) {
+        $weekday = $day->format('N');
+        if ($weekday < 6) { // Mon–Fri
+            $workdays++;
+        }
+    }
+    return $workdays;
+}
+
 foreach ($employees as $emp) {
-    $employeeId = $emp['employee_id'];
+    $employeeId      = $emp['employee_id'];
+    $name            = htmlspecialchars($emp['name'] ?? '');
+    $total_hours     = floatval($emp['total_hours'] ?? 0);
+    $salary_rate     = floatval($emp['salary_rate'] ?? 0);
+    $allowance       = floatval($emp['allowance'] ?? 0);
+    $bonus           = floatval($emp['bonus'] ?? 0);
+    $overtime_pay    = floatval($emp['overtime_pay'] ?? 0);
+    $withholding_tax = floatval($emp['withholding_tax'] ?? 0);
+    $sss             = floatval($emp['sss'] ?? 0);
+    $pagibig         = floatval($emp['pagibig'] ?? 0);
+    $philhealth      = floatval($emp['philhealth'] ?? 0);
+    $late            = floatval($emp['late_deduction'] ?? 0);
+    $absent          = floatval($emp['absent_deduction'] ?? 0);
+    $basic_salary    = floatval($emp['basic_salary'] ?? 0);
+    $gross_salary    = floatval($emp['gross_earnings'] ?? 0);
+    $total_deductions= $withholding_tax + $sss + $pagibig + $philhealth + $late + $absent;
+    $net_salary      = floatval($emp['net_pay'] ?? ($gross_salary - $total_deductions));
 
-   
-    $stmt = $conn->prepare("
-        SELECT e.first_name, e.last_name, e.salary_rate,
-               SUM(TIMESTAMPDIFF(SECOND, t.time_in, t.time_out)) AS total_seconds
-        FROM time_logs t
-        JOIN employees e ON t.employee_id = e.employee_id
-        WHERE t.employee_id = ? AND t.date BETWEEN ? AND ?
-        GROUP BY e.employee_id
-    ");
-    $stmt->bind_param("iss", $employeeId, $startDate, $endDate);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
 
-    if (!$row) continue;
-
-    $fullName = htmlspecialchars($row['first_name'] . ' ' . $row['last_name']);
-    $salary_rate = floatval($row['salary_rate']);
-    $total_hours = round($row['total_seconds'] / 3600, 2);
-
-    $gross_salary = ($total_hours * $salary_rate) + $allowance + $bonus + $overtime_pay;
-    $total_deductions = $withholding_tax + $sss + $pagibig + $philhealth + $late_deduction + $absent_deduction;
-    $net_salary = $gross_salary - $total_deductions;
-
-    
     $html .= '
     <hr>
-    <p><strong>Employee:</strong> ' . $fullName . '</p>
+    <p><strong>Employee:</strong> ' . $name . '</p>
+
     <p><strong>ID Number:</strong> ' . htmlspecialchars($employeeId) . '</p>
     <table>
         <tr class="section-title">
@@ -82,7 +90,7 @@ foreach ($employees as $emp) {
         </tr>
         <tr>
             <td>Basic Salary</td>
-            <td>' . number_format($total_hours * $salary_rate, 2) . '</td>
+            <td>' . number_format($basic_salary, 2) . '</td>
             <td>Withholding Tax</td>
             <td>' . number_format($withholding_tax, 2) . '</td>
         </tr>
@@ -107,12 +115,12 @@ foreach ($employees as $emp) {
         <tr>
             <td></td><td></td>
             <td>Late Deduction</td>
-            <td>' . number_format($late_deduction, 2) . '</td>
+            <td>' . number_format($late, 2) . '</td>
         </tr>
         <tr>
             <td></td><td></td>
             <td>Absent Deduction</td>
-            <td>' . number_format($absent_deduction, 2) . '</td>
+            <td>' . number_format($absent, 2) . '</td>
         </tr>
         <tr class="total">
             <td>Gross Earnings</td>
@@ -127,15 +135,24 @@ foreach ($employees as $emp) {
     </table>';
 }
 
-
+// Generate PDF
 $dompdf = new Dompdf();
 $dompdf->loadHtml($html);
 $dompdf->setPaper('A4', 'portrait');
 $dompdf->render();
 
+// Dynamic filename
+$firstEmployeeName = isset($employees[0]['name']) ? preg_replace('/\s+/', '_', $employees[0]['name']) : 'Employee';
+if (count($employees) === 1) {
+    $firstEmployeeName = preg_replace('/\s+/', '_', $employees[0]['name']);
+    $filename = $firstEmployeeName . '_Payslip_' . $startDate . '_to_' . $endDate . '.pdf';
+} else {
+    $filename = 'Employees_Payslip_' . $startDate . '_to_' . $endDate . '.pdf';
+}
 
+// Output
 header("Content-Type: application/pdf");
-header("Content-Disposition: attachment; filename=payslip.pdf");
+header("Content-Disposition: attachment; filename=$filename");
 echo $dompdf->output();
 exit;
 ?>

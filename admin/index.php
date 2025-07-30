@@ -5932,6 +5932,14 @@ if (!isset($_SESSION['user_id'])) {
     <script>
     var hostUrl = "assets/";
     </script>
+    <script>
+setInterval(() => {
+  fetch('/payslip/admin/pages/auto_mark_absent.php')
+    .then(res => res.text())
+    .then(console.log)
+    .catch(console.error);
+}, 60000); // every 60 seconds
+</script>
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="assets/plugins/global/plugins.bundle.js"></script>
     <script src="assets/js/scripts.bundle.js"></script>

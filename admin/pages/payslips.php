@@ -24,7 +24,6 @@ include __DIR__ . '/../../database/connect.php';
     </div>
 </div>
 
-
 <div class="container-fluid">
     <table id="kt_datatable_example_1" class="table table-sm table-row-dashed fs-7 gy-3">
         <thead>
@@ -78,19 +77,15 @@ include __DIR__ . '/../../database/connect.php';
                 <td><button class="btn btn-sm btn-info" disabled>View</button></td>
             </tr>
             <?php endwhile; ?>
-
-
         </tbody>
     </table>
 </div>
-
 <!-- Button to trigger bulk generation -->
 <div class="text-end my-4">
     <button class="btn btn-primary btn-sm" id="generateSelectedPayslips">
         Generate for Selected
     </button>
 </div>
-
 <!-- Payslip Modal -->
 <div class="modal fade" id="payslipModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -130,7 +125,6 @@ include __DIR__ . '/../../database/connect.php';
         </form>
     </div>
 </div>
-
 <!-- Payslip Format Edit Modal -->
 <div class="modal fade" id="editPayslipModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -139,7 +133,6 @@ include __DIR__ . '/../../database/connect.php';
                 <h5 class="modal-title">Edit Payslip Default Values</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="row">
@@ -161,8 +154,13 @@ include __DIR__ . '/../../database/connect.php';
                                 <label for="withholding_tax" class="form-label">Withholding Tax</label>
                                 <input type="number" class="form-control" name="withholding_tax" id="withholding_tax" />
                             </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" value="" id="showYearlyTax">
+                                <label class="form-check-label" for="showYearlyTax">
+                                    Show Yearly Withholding Tax
+                                </label>
+                            </div>
                         </div>
-
                         <!-- Deductions Fields -->
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -190,7 +188,6 @@ include __DIR__ . '/../../database/connect.php';
                     </div>
                 </div>
             </div>
-
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -198,7 +195,6 @@ include __DIR__ . '/../../database/connect.php';
         </form>
     </div>
 </div>
-
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -259,113 +255,124 @@ document.addEventListener("DOMContentLoaded", function() {
             const payslipModal = document.getElementById('payslipModal');
             const modalInstance = bootstrap.Modal.getOrCreateInstance(payslipModal);
             modalInstance.show();
-
         });
     }
 
     const fetchBtn = document.getElementById("fetchPayslipData");
-    if (fetchBtn) {
-        fetchBtn.addEventListener("click", async () => {
-            const start_date = document.querySelector("input[name='start_date']").value;
-            const end_date = document.querySelector("input[name='end_date']").value;
+if (fetchBtn) {
+    fetchBtn.addEventListener("click", async () => {
+        const start_date = document.querySelector("input[name='start_date']").value;
+        const end_date = document.querySelector("input[name='end_date']").value;
 
-            await loadPayslipDefaults();
+        await loadPayslipDefaults();
 
-            fetch("/payslip/admin/pages/get_payslip_data.php", {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        employee_ids: selectedEmployees.map(e => e.employee_id),
-                        start_date,
-                        end_date
-                    })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        const container = document.getElementById("employee-payslip-forms");
-                        container.innerHTML = "";
+        fetch("/payslip/admin/pages/get_payslip_data.php", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                employee_ids: selectedEmployees.map(e => e.employee_id),
+                start_date,
+                end_date
+            })
+        })
+        .then(async res => {
+            const text = await res.text();
+            try {
+                const json = JSON.parse(text);
+                console.log("JSON response:", json);
+                return json;
+            } catch (err) {
+                console.error("Failed to parse JSON. Raw response:", text);
+                throw err;
+            }
+        })
+        .then(data => {
+            if (data.status === "success") {
+                const container = document.getElementById("employee-payslip-forms");
+                container.innerHTML = "";
 
-                        data.employees.forEach(emp => {
-                            const t = (val) => {
-                                if (!payslipDefaults) return "0.00";
-                                return parseFloat(payslipDefaults[val] || 0)
-                                    .toFixed(2);
-                            };
+                data.employees.forEach(emp => {
+                    const t = (val, empVal = null) => {
+                        if (empVal !== null && !isNaN(empVal)) return parseFloat(empVal).toFixed(2);
+                        return parseFloat(payslipDefaults[val] || 0).toFixed(2);
+                    };
 
-                            const grossEarnings = (emp.total_hours * emp.salary_rate) +
-                                parseFloat(t('allowance')) + parseFloat(t('bonus')) +
-                                parseFloat(t('overtime_pay'));
-                            const totalDeductions = parseFloat(t('sss')) + parseFloat(t(
-                                    'pagibig')) + parseFloat(t('philhealth')) +
-                                parseFloat(t('withholding_tax')) + parseFloat(t(
-                                    'late_deduction')) + parseFloat(t(
-                                    'absent_deduction'));
-                            const netSalary = grossEarnings - totalDeductions;
+                    const grossEarnings = parseFloat(emp.basic_salary) 
+                        + parseFloat(t('allowance', emp.allowance))
+                        + parseFloat(t('bonus', emp.bonus))
+                        + parseFloat(t('overtime_pay', emp.overtime_pay));
 
-                            const template = `
-                                    <div class="border rounded p-4 mb-4 shadow bg-white">
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <div>
-                                        <h5 class="fw-bold mb-1">Employee Payslip</h5>
-                                        <small>${start_date} to ${end_date}</small>
-                                        </div>
-                                        <div class="text-end">
-                                        <h6 class="mb-0">${emp.name}</h6>
-                                        <small>ID: ${emp.employee_id}</small>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" name="employee_id" value="${emp.employee_id}">
-                                    <input type="hidden" name="total_hours" value="${emp.total_hours}">
-                                    <input type="hidden" name="salary_rate" value="${emp.salary_rate}">
-                                    <input type="hidden" name="sss" value="${t('sss')}">
-                                    <input type="hidden" name="pagibig" value="${t('pagibig')}">
-                                    <input type="hidden" name="philhealth" value="${t('philhealth')}">
-                                    <input type="hidden" name="withholding_tax" value="${t('withholding_tax')}">
-                                    <input type="hidden" name="late_deduction" value="${t('late_deduction')}">
-                                    <input type="hidden" name="absent_deduction" value="${t('absent_deduction')}">
-                                    <input type="hidden" name="allowance" value="${t('allowance')}">
-                                    <input type="hidden" name="overtime_pay" value="${t('overtime_pay')}">
-                                    <input type="hidden" name="bonus" value="${t('bonus')}">
-                                    <div class="row">
-                                        <div class="col-md-4 mb-2"><strong>Hours Worked:</strong> ${emp.total_hours}</div>
-                                        <div class="col-md-4 mb-2"><strong>Salary Rate:</strong> ₱${parseFloat(emp.salary_rate).toFixed(2)}</div>
-                                        <div class="col-md-4 mb-2"><strong>SSS:</strong> ₱${t('sss')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Pag-IBIG:</strong> ₱${t('pagibig')}</div>
-                                        <div class="col-md-4 mb-2"><strong>PhilHealth:</strong> ₱${t('philhealth')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Withholding Tax:</strong> ₱${t('withholding_tax')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Late Deduction:</strong> ₱${t('late_deduction')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Absent Deduction:</strong> ₱${t('absent_deduction')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Allowance:</strong> ₱${t('allowance')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Overtime Pay:</strong> ₱${t('overtime_pay')}</div>
-                                        <div class="col-md-4 mb-2"><strong>Bonus:</strong> ₱${t('bonus')}</div>
-                                    </div>
-                                    <hr>
-                                    <div class="row fw-bold">
-                                        <div class="col-md-4"><strong>Gross Earnings:</strong></div>
-                                        <div class="col-md-8 text-end">₱${grossEarnings.toFixed(2)}</div>
-                                        <div class="col-md-4"><strong>Total Deductions:</strong></div>
-                                        <div class="col-md-8 text-end">₱${totalDeductions.toFixed(2)}</div>
-                                        <div class="col-md-4"><strong>Net Salary:</strong></div>
-                                        <div class="col-md-8 text-end text-success">₱${netSalary.toFixed(2)}</div>
-                                    </div>
-                                    </div>
-                                    `;
-                            let allHTML = '';
-                            data.employees.forEach(emp => {
+                    const totalDeductions = parseFloat(t('sss', emp.sss))
+                        + parseFloat(t('pagibig', emp.pagibig))
+                        + parseFloat(t('philhealth', emp.philhealth))
+                        + parseFloat(t('withholding_tax', emp.withholding_tax))
+                        + parseFloat(t('late_deduction', emp.late_deduction))
+                        + parseFloat(t('absent_deduction', emp.absent_deduction));
 
-                                allHTML += template;
-                            });
-                            container.innerHTML = allHTML;
-                        });
-                    } else {
-                        alert("Failed to fetch payslip data.");
-                    }
+                    const netSalary = grossEarnings - totalDeductions;
+
+                    const yearlyTax = (parseFloat(t('withholding_tax', emp.withholding_tax)) * 12).toFixed(2);
+
+                    const template = `
+                        <div class="border rounded p-4 mb-4 shadow bg-white">
+                            <div class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-1">Employee Payslip</h5>
+                                    <small>${start_date} to ${end_date}</small>
+                                </div>
+                                <div class="text-end">
+                                    <h6 class="mb-0">${emp.name}</h6>
+                                    <small>ID: ${emp.employee_id}</small>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-2"><strong>Hours Worked:</strong> ${emp.total_hours}</div>
+                                <div class="col-md-4 mb-2"><strong>Salary Rate:</strong> ₱${parseFloat(emp.salary_rate).toFixed(2)}</div>
+                                <div class="col-md-4 mb-2"><strong>SSS:</strong> ₱${t('sss', emp.sss)}</div>
+                                <div class="col-md-4 mb-2"><strong>Pag-IBIG:</strong> ₱${t('pagibig', emp.pagibig)}</div>
+                                <div class="col-md-4 mb-2"><strong>PhilHealth:</strong> ₱${t('philhealth', emp.philhealth)}</div>
+                                <div class="col-md-4 mb-2"><strong>Monthly Withholding Tax:</strong> ₱${t('withholding_tax', emp.withholding_tax)}</div>
+                                <div class="col-md-4 mb-2 yearly-tax" style="display: none;"><strong>Yearly Withholding Tax:</strong> ₱${yearlyTax}</div>
+                                <div class="col-md-4 mb-2"><strong>Late Deduction:</strong> ₱${t('late_deduction', emp.late_deduction)}</div>
+                                <div class="col-md-4 mb-2"><strong>Absent Deduction:</strong> ₱${t('absent_deduction', emp.absent_deduction)}</div>
+                                <div class="col-md-4 mb-2"><strong>Allowance:</strong> ₱${t('allowance', emp.allowance)}</div>
+                                <div class="col-md-4 mb-2"><strong>Overtime Pay:</strong> ₱${t('overtime_pay', emp.overtime_pay)}</div>
+                                <div class="col-md-4 mb-2"><strong>Bonus:</strong> ₱${t('bonus', emp.bonus)}</div>
+                            </div>
+                            <hr>
+                            <div class="row fw-bold">
+                                <div class="col-md-4"><strong>Gross Earnings:</strong></div>
+                                <div class="col-md-8 text-end">₱${grossEarnings.toFixed(2)}</div>
+                                <div class="col-md-4"><strong>Total Deductions:</strong></div>
+                                <div class="col-md-8 text-end">₱${totalDeductions.toFixed(2)}</div>
+                                <div class="col-md-4"><strong>Net Salary:</strong></div>
+                                <div class="col-md-8 text-end text-success">₱${netSalary.toFixed(2)}</div>
+                            </div>
+                        </div>
+                    `;
+
+                    container.insertAdjacentHTML('beforeend', template);
                 });
-        });;
-    }
+
+                // Toggle Yearly Tax visibility
+                const taxToggle = document.getElementById('toggleYearlyTax');
+                if (taxToggle) {
+                    taxToggle.addEventListener('change', () => {
+                        document.querySelectorAll('.yearly-tax').forEach(div => {
+                            div.style.display = taxToggle.checked ? 'block' : 'none';
+                        });
+                    });
+                }
+            } else {
+                alert("Failed to fetch payslip data.");
+            }
+        });
+    });
+}
+
+
 
     flatpickr("#dateRangePicker", {
         mode: "range",
@@ -403,7 +410,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-
+    
     const payslipFormatForm = document.getElementById('payslipFormatForm');
     if (payslipFormatForm) {
         payslipFormatForm.addEventListener('submit', function(e) {
@@ -433,7 +440,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
     }
-
+      
     const payslipForm = document.getElementById('payslipForm');
     if (payslipForm) {
         payslipForm.addEventListener('submit', function(e) {
@@ -456,10 +463,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     return val;
                 };
 
-
                 const total_hours = getNumber("Hours Worked:");
                 const salary_rate = getNumber("Salary Rate:");
-                const gross = total_hours * salary_rate;
+                const gross = salary_rate;
                 const allowance = getNumber("Allowance:");
                 const overtime_pay = getNumber("Overtime Pay:");
                 const bonus = getNumber("Bonus:");
@@ -474,13 +480,19 @@ document.addEventListener("DOMContentLoaded", function() {
                     pagibig + philhealth + late + absent);
 
                 payslips.push({
-                    employee_id: emp.employee_id,
-                    start_date,
-                    end_date,
-                    total_hours,
-                    salary_rate,
-                    total_pay
-                });
+                employee_id: emp.employee_id,
+                start_date,
+                end_date,
+                total_hours,
+                salary_rate,
+                bonus,
+                allowance,
+                overtime_pay,
+                withholding_tax: tax,
+                late_deduction: late,
+                absent_deduction: absent,
+                total_pay
+            });
             });
 
             fetch("/payslip/admin/pages/save_payslip_data.php", {
@@ -507,16 +519,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
         });
     }
-
 });
 
-document.addEventListener('click', function(e) {
+document.addEventListener('click', function (e) {
     const btn = e.target.closest('.export-btn');
     if (!btn) return;
-
     e.preventDefault();
 
-    const type = btn.getAttribute('data-type');
+    const type = btn.getAttribute('data-type'); // 'pdf' or 'excel'
     const start_date = document.querySelector("input[name='start_date']").value;
     const end_date = document.querySelector("input[name='end_date']").value;
 
@@ -525,69 +535,69 @@ document.addEventListener('click', function(e) {
         return;
     }
 
-    const payslipElements = document.querySelectorAll("#employee-payslip-forms .border");
-    const exportData = {
-        start_date,
-        end_date,
-        employees: []
-    };
+    if (!selectedEmployees.length) {
+        alert("Please select at least one employee.");
+        return;
+    }
 
-    selectedEmployees.forEach((emp, index) => {
-        const div = payslipElements[index];
-        if (!div) return;
-
-        const getNumber = label => {
-            const spans = div.querySelectorAll("span");
-            for (const span of spans) {
-                if (span.textContent.includes(label)) {
-                    const text = span.textContent.replace(label, "").trim();
-                    return parseFloat(text.replace(/[^0-9.-]+/g, "")) || 0;
-                }
+    // Step 1: Get accurate computed payslip data from backend
+    fetch('/payslip/admin/pages/get_payslip_data.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            start_date,
+            end_date,
+            employee_ids: selectedEmployees.map(emp => emp.employee_id)
+        })
+    })
+        .then(res => res.json())
+        .then(data => {
+            if (!data || data.status !== 'success' || !data.employees) {
+                throw new Error("Invalid or missing payroll data from server.");
             }
-            return 0;
-        };
-        exportData.employees.push({
-            employee_id: emp.employee_id,
-            name: emp.name,
-            total_hours: getNumber("Hours Worked:"),
-            salary_rate: getNumber("Salary Rate:"),
-            allowance: getNumber("Allowance:"),
-            overtime_pay: getNumber("Overtime Pay:"),
-            bonus: getNumber("Bonus:"),
-            tax: getNumber("Withholding Tax:"),
-            sss: getNumber("SSS:"),
-            pagibig: getNumber("Pag-IBIG:"),
-            philhealth: getNumber("PhilHealth:"),
-            late: getNumber("Late Deduction:"),
-            absent: getNumber("Absent Deduction:")
-        });
-    });
 
-    const exportUrl = type === 'pdf' ?
-        '/payslip/admin/pages/export_payslip_pdf.php' :
-        '/payslip/admin/pages/export_payslip_excel.php';
+            const exportData = {
+                start_date,
+                end_date,
+                employees: data.employees
+            };
 
-    fetch(exportUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(exportData)
+            // Step 2: Send that accurate data to PDF or Excel generator
+            const exportUrl = type === 'pdf'
+                ? '/payslip/admin/pages/export_payslip_pdf.php'
+                : '/payslip/admin/pages/export_payslip_excel.php';
+
+            return fetch(exportUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(exportData)
+            });
         })
-        .then(res => res.blob())
-        .then(blob => {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `payslip.${type === 'pdf' ? 'pdf' : 'xlsx'}`;
-            document.body.appendChild(a);
-            a.click();
-            URL.revokeObjectURL(url);
-            a.remove();
-        })
-        .catch(err => {
-            console.error(`Error exporting ${type}:`, err);
-            alert(`Failed to export ${type.toUpperCase()} payslip.`);
-        });
+        .then(async res => {
+    const blob = await res.blob();
+    let filename = 'payslip.' + (type === 'pdf' ? 'pdf' : 'xlsx');
+
+    // Try to extract filename from headers
+    const disposition = res.headers.get('Content-Disposition');
+    const match = disposition && disposition.match(/filename="?([^"]+)"?/);
+    if (match && match[1]) {
+        filename = match[1];
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
+})
 });
+
+
 </script>

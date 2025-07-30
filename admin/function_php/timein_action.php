@@ -1,6 +1,13 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 require __DIR__ . '/../../database/connect.php';
+
+// Check login
+if (!isset($_SESSION['employee_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Employee not logged in.']);
+    exit;
+}
 
 $data = json_decode(file_get_contents("php://input"), true);
 $lat = $data['lat'];
@@ -8,48 +15,122 @@ $lon = $data['lon'];
 $action = $data['action'] ?? 'in';
 $employee_id = $_SESSION['employee_id'];
 
+// Fetch employee schedule and info
+$schedStmt = $conn->prepare("SELECT scheduled_time_in, scheduled_time_out, salary_rate, first_name, last_name FROM employees WHERE employee_id = ?");
+$schedStmt->bind_param("i", $employee_id);
+$schedStmt->execute();
+$schedResult = $schedStmt->get_result();
+$schedData = $schedResult->fetch_assoc(); 
+
+if (!$schedData) {
+    echo json_encode(['success' => false, 'message' => 'Employee schedule not found.']);
+    exit;
+}
+
+$scheduledTimeIn = new DateTime($schedData['scheduled_time_in']);
+$scheduledTimeOut = new DateTime($schedData['scheduled_time_out']);
+$salaryRate = $schedData['salary_rate'];
+$employeeName = $schedData['first_name'] . ' ' . $schedData['last_name'];
+$currentDate = (new DateTime())->format('Y-m-d');
+
 if ($action === 'in') {
-    // Insert into time_logs
-    $stmt = $conn->prepare("INSERT INTO time_logs (employee_id, time_in, latitude, longitude, date) VALUES (?, NOW(), ?, ?, CURDATE())");
-    $stmt->bind_param("idd", $employee_id, $lat, $lon);
-    $stmt->execute();
+    
+    $checkStmt = $conn->prepare("SELECT id FROM attendance WHERE employee_id = ? AND date = ?");
+    $checkStmt->bind_param("is", $employee_id, $currentDate);
+    $checkStmt->execute();
+    $checkStmt->store_result();
 
-    // Get employee name (assumes you have an 'employees' table)
-    $nameStmt = $conn->prepare("SELECT first_name, last_name FROM employees WHERE employee_id = ?");
-    $nameStmt->bind_param("i", $employee_id);
-    $nameStmt->execute();
-    $nameResult = $nameStmt->get_result();
-    $employee = $nameResult->fetch_assoc();
-    $employeeName = $employee['first_name'] . ' ' . $employee['last_name'];
-
-    // Insert into attendance table
-    $insertAttendance = $conn->prepare("INSERT INTO attendance (employee_id, name, time_in, date) VALUES (?, ?, NOW(), CURDATE())");
-    $insertAttendance->bind_param("is", $employee_id, $employeeName);
-    $insertAttendance->execute();
-
-    echo "Time-in successful!";
-}
-
-elseif ($action === 'out') {
-    $stmt = $conn->prepare("UPDATE time_logs SET time_out = NOW() WHERE employee_id = ? AND date = CURDATE() AND time_out IS NULL ORDER BY time_in DESC LIMIT 1");
-    $stmt->bind_param("i", $employee_id);
-    $stmt->execute();
-
-    if ($stmt->affected_rows) {
-        // Update time_out and total_time in attendance table
-        $updateAttendance = $conn->prepare("
-            UPDATE attendance 
-            SET time_out = NOW(), total_time = TIMEDIFF(NOW(), time_in)
-            WHERE employee_id = ? AND date = CURDATE()
-        ");
-            
-        $updateAttendance->bind_param("i", $employee_id);
-        $updateAttendance->execute();
-
-        echo "Time-out successful!";
-    } else {
-        echo "No matching time-in found for today.";
+    if ($checkStmt->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => "You can't time in because you already timed in today."]);
+        exit;
     }
+    
+    
+    // Evaluate lateness
+    $now = new DateTime();
+    $diffMinutes = ($now->getTimestamp() - $scheduledTimeIn->getTimestamp()) / 60;
+    $lateStatus = 'On Time';
+    $lateMinutes = 0;
+    $deduction = 0;
+    
+    if ($diffMinutes > 5) {
+        $lateStatus = 'Late';
+        $lateMinutes = round($diffMinutes);
+        $deduction = round(($lateMinutes / 60) * $salaryRate, 2);
+    } elseif ($diffMinutes < 0) {
+        $lateStatus = 'Early In';
+    }
+
+    $insert = $conn->prepare("
+        INSERT INTO attendance 
+        (employee_id, name, time_in, date, late_status, late_minutes, deduction, remarks)
+        VALUES (?, ?, NOW(), ?, ?, ?, ?, ?)
+    ");
+    $remarks = ($lateStatus === 'Late') ? 'Late' : 'Present';
+    $insert->bind_param("isssdds", $employee_id, $employeeName, $currentDate, $lateStatus, $lateMinutes, $deduction, $remarks);
+    $insert->execute();
+
+    echo json_encode([
+        'success' => true,
+        'message' => "Time-in successful! Status: $lateStatus" . ($deduction > 0 ? " | Deduction: ₱$deduction" : "")
+    ]);
+    exit;
 }
 
+if ($action === 'out') {
+    
+    $fetchStmt = $conn->prepare("SELECT time_in, late_minutes, deduction, remarks FROM attendance WHERE employee_id = ? AND date = ?");
+    $fetchStmt->bind_param("is", $employee_id, $currentDate);
+    $fetchStmt->execute();
+    $result = $fetchStmt->get_result();
+    $record = $result->fetch_assoc();
+
+    if (!$record || !$record['time_in']) {
+        echo json_encode(['success' => false, 'message' => "You haven't timed in yet."]);
+        exit;
+    }
+
+    $now = new DateTime();
+    $underTimeStatus = '';
+    $underTimeDeduction = 0;
+    $minutesUnder = 0;
+
+    if ($now < $scheduledTimeOut) {
+        $minutesUnder = ($scheduledTimeOut->getTimestamp() - $now->getTimestamp()) / 60;
+        $underTimeStatus = 'Under Time';
+        $underTimeDeduction = round(($minutesUnder / 60) * $salaryRate, 2);
+    }
+
+    
+    $timeIn = new DateTime($record['time_in']);
+    $totalTime = $timeIn->diff($now)->format('%H:%I:%S');
+
+    
+    $remarks = 'Present';
+    if ($record['late_minutes'] > 0 && $underTimeDeduction > 0) {
+        $remarks = 'Late & Under Time';
+    } elseif ($record['late_minutes'] > 0) {
+        $remarks = 'Late';
+    } elseif ($underTimeDeduction > 0) {
+        $remarks = 'Under Time';
+    }
+
+    $update = $conn->prepare("
+        UPDATE attendance 
+        SET time_out = NOW(), total_time = ?, undertime_status = ?, undertime_deduction = ?, remarks = ?
+        WHERE employee_id = ? AND date = ?
+    ");
+    $update->bind_param("ssdsss", $totalTime, $underTimeStatus, $underTimeDeduction, $remarks, $employee_id, $currentDate);
+    $update->execute();
+
+    echo json_encode([
+        'success' => true,
+        'message' => "Time-out successful!" . ($underTimeDeduction > 0 ? " Status: $underTimeStatus | Deduction: ₱$underTimeDeduction" : "")
+    ]);
+    exit;
+}
+
+
+echo json_encode(['success' => false, 'message' => 'Invalid action or request.']);
+exit;
 ?>

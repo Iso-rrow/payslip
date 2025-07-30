@@ -5,15 +5,6 @@ include __DIR__ . '/../../database/connect.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-// Get default values
-function getPayslipDefaults() {
-    $jsonPath = __DIR__ . '/../pages/get_payslip_defaults.php';
-    ob_start();
-    include $jsonPath;
-    $json = ob_get_clean();
-    return json_decode($json, true);
-}
-
 error_reporting(0);
 ini_set('display_errors', 0);
 ob_start();
@@ -26,8 +17,8 @@ if (!$data || !isset($data['employees'])) {
     exit;
 }
 
-$defaults = getPayslipDefaults();
-extract(array_map('floatval', $defaults)); // load values like allowance, bonus, sss, etc.
+$startDate = $data['start_date'];
+$endDate = $data['end_date'];
 
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
@@ -41,33 +32,27 @@ $sheet->fromArray([
 ], NULL, 'A1');
 
 $row = 2;
+
 foreach ($data['employees'] as $emp) {
+    // Make sure all values exist, defaulting to 0 if missing
     $employee_id = $emp['employee_id'];
     $name = $emp['name'];
-    $startDate = $data['start_date'];
-    $endDate = $data['end_date'];
 
-    // Get total worked hours and salary_rate from DB
-    $stmt = $conn->prepare("
-        SELECT e.salary_rate, SUM(TIMESTAMPDIFF(SECOND, t.time_in, t.time_out)) AS total_seconds
-        FROM time_logs t
-        JOIN employees e ON t.employee_id = e.employee_id
-        WHERE t.employee_id = ? AND t.date BETWEEN ? AND ?
-        GROUP BY e.employee_id
-    ");
-    $stmt->bind_param("iss", $employee_id, $startDate, $endDate);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $rowData = $result->fetch_assoc();
+    $basic_salary     = floatval($emp['basic_salary'] ?? 0);
+    $allowance        = floatval($emp['allowance'] ?? 0);
+    $overtime_pay     = floatval($emp['overtime_pay'] ?? 0);
+    $bonus            = floatval($emp['bonus'] ?? 0);
 
-    $salary_rate = isset($rowData['salary_rate']) ? floatval($rowData['salary_rate']) : 0;
-    $total_hours = isset($rowData['total_seconds']) ? round($rowData['total_seconds'] / 3600, 2) : 0;
-    $basic_salary = $total_hours * $salary_rate;
+    $sss              = floatval($emp['sss'] ?? 0);
+    $philhealth       = floatval($emp['philhealth'] ?? 0);
+    $pagibig          = floatval($emp['pagibig'] ?? 0);
+    $withholding_tax  = floatval($emp['withholding_tax'] ?? 0);
+    $late_deduction   = floatval($emp['late_deduction'] ?? 0);
+    $absent_deduction = floatval($emp['absent_deduction'] ?? 0);
 
-    // Use defaults
     $gross = $basic_salary + $allowance + $overtime_pay + $bonus;
-    $deductions = $withholding_tax + $sss + $philhealth + $pagibig + $late_deduction + $absent_deduction;
-    $net = $gross - $deductions;
+    $total_deductions = $sss + $philhealth + $pagibig + $withholding_tax + $late_deduction + $absent_deduction;
+    $net = $gross - $total_deductions;
 
     $sheet->setCellValue("A{$row}", $employee_id);
     $sheet->setCellValue("B{$row}", $name);
@@ -85,18 +70,30 @@ foreach ($data['employees'] as $emp) {
     $sheet->setCellValue("N{$row}", $late_deduction);
     $sheet->setCellValue("O{$row}", $absent_deduction);
     $sheet->setCellValue("P{$row}", $net);
+
     $row++;
 }
 
+// Autosize columns
+// Autosize columns
 foreach (range('A', 'P') as $col) {
     $sheet->getColumnDimension($col)->setAutoSize(true);
 }
 
+// Determine filename
+if (count($data['employees']) === 1) {
+    $firstEmployeeName = preg_replace('/[^\w\-]/', '_', $data['employees'][0]['name']);
+    $filename = $firstEmployeeName . '_Payslip_' . $startDate . '_to_' . $endDate . '.xlsx';
+} else {
+    $filename = 'Employees_Payslip_' . $startDate . '_to_' . $endDate . '.xlsx';
+}
+
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment; filename="payslip.xlsx"');
+header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Cache-Control: max-age=0');
 
 ob_end_clean();
 $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
 exit;
+
