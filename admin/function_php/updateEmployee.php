@@ -11,12 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Validate and sanitize hire date
-    $hire_date = trim($data['hire_date'] ?? '');
-    if (empty($hire_date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $hire_date)) {
-        echo json_encode(['success' => false, 'message' => 'Invalid or missing hire date']);
-        exit;
-    }
 
     // Handle image upload
     if (!empty($_FILES['employee_image']['name'])) {

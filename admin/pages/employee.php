@@ -329,15 +329,15 @@ if ($result && $result->num_rows > 0) {
             </tr>
         </thead>
 
-         <tbody class="text-gray-600 fw-semibold">
-        <?php foreach ($employees as $employee): ?>
+        <tbody class="text-gray-600 fw-semibold">
+            <?php foreach ($employees as $employee): ?>
             <tr class="text-start text-center fs-7 gs-0 my-2">
                 <td class="w-10px pe-2">
                     <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
                         <input class="form-check-input" type="checkbox" value="<?= $employee['employee_id'] ?>" />
                     </div>
                 </td>
-                    
+
                 <!-- Auto ID with profile picture -->
                 <td>
                     <div class="d-flex align-items-center justify-content-center">
@@ -353,9 +353,8 @@ if ($result && $result->num_rows > 0) {
                         }
                         ?>
                         <div class="symbol symbol-25px me-2">
-                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>"
-                                 alt="Profile" class="rounded-circle border"
-                                 style="width: 25px; height: 25px; object-fit: cover;">
+                            <img src="<?= $imagePath . htmlspecialchars($imgFile) ?>" alt="Profile"
+                                class="rounded-circle border" style="width: 25px; height: 25px; object-fit: cover;">
                         </div>
                         <span><?= htmlspecialchars($employee['employee_id']) ?></span>
                     </div>
@@ -369,11 +368,13 @@ if ($result && $result->num_rows > 0) {
                 <td><?= htmlspecialchars(date('F d, Y', strtotime($employee['date_hired']))) ?></td>
 
                 <td>
-                    <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $employee['employee_id'] ?>">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $employee['employee_id'] ?>">Delete</button>
+                    <button class="btn btn-sm btn-primary edit-btn"
+                        data-id="<?= $employee['employee_id'] ?>">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn"
+                        data-id="<?= $employee['employee_id'] ?>">Delete</button>
                 </td>
             </tr>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>
@@ -497,8 +498,8 @@ if ($result && $result->num_rows > 0) {
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Date Hired</label>
-                        <input type="date" name="hire_date" id="edit_hire_date" class="form-control">
+                        <label class="form-label">Date Hired EX: 19990128-1999/01/28</label>
+                        <input type="text" name="hire_date" id="edit_hire_date" class="form-control">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Scheduled Time In</label>
@@ -533,12 +534,12 @@ if ($result && $result->num_rows > 0) {
                         <input type="number" class="form-control" id="edit_salary_rate" name="salary_rate" step="0.01">
                     </div>
                     <div class="col-md-6">
-                    <label class="form-label">Payment Method</label>
-                    <select id="edit_payment_method" name="payment_method" class="form-select" required>
-                        <option value="" disabled>Select Method</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Check">Check</option>
-                    </select>
+                        <label class="form-label">Payment Method</label>
+                        <select id="edit_payment_method" name="payment_method" class="form-select" required>
+                            <option value="" disabled>Select Method</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                            <option value="Check">Check</option>
+                        </select>
                     </div>
                     <!-- Address -->
                     <div class="col-md-12">
