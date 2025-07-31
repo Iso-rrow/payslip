@@ -7,11 +7,11 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Settings</title>
+        <title>Profile</title>
 
         <!-- Favicons -->
         <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
-
+        
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
         
@@ -48,7 +48,7 @@ Bootstrap 5 Dashboard Admin Template
             <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
+            
             <form class="custom-form header-form ms-lg-3 ms-md-3 me-lg-auto me-md-auto order-2 order-lg-0 order-md-0" action="#" method="get" role="form">
                 <input class="form-control" name="search" type="text" placeholder="Search" aria-label="Search">
             </form>
@@ -117,7 +117,7 @@ Bootstrap 5 Dashboard Admin Template
 
                         <div class="dropdown-menu dropdown-menu-social bg-white shadow">
                             <div class="container">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-lg-4 col-md-4 col-4">
                                         <a class="dropdown-item text-center" href="#">
                                             <img src="images/social/search.png" class="profile-image img-fluid" alt="">
@@ -159,7 +159,7 @@ Bootstrap 5 Dashboard Admin Template
                                             <span class="d-block">Youtube</span>
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -174,8 +174,8 @@ Bootstrap 5 Dashboard Admin Template
                                     <img src="images/profile.png" class="profile-image img-fluid me-3" alt="">
 
                                     <div class="d-flex flex-column">
-                                        <small>Jimmy Aquino</small>
-                                        <a href="#">Fullstack Developer</a>
+                                        <small>Matthew Boquiren</small>
+                                        <a href="#">Project Manager</a>
                                     </div>
                                 </div>
                             </li>
@@ -233,21 +233,28 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
+                                <a class="nav-link" href="request">
                                     <i class="bi bi-send-check-fill"></i>
                                     Request
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="profile">
+                                <a class="nav-link" href="department">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Manage Department
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active" href="profile">
                                     <i class="bi bi-person-fill"></i>
                                     Profile
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" href="settings">
+                                <a class="nav-link" href="settings">
                                     <i class="bi bi-gear-fill"></i>
                                     Settings
                                 </a>
@@ -278,104 +285,95 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Settings</h1>
+                        <h1 class="h2 mb-0">Profile</h1>
                     </div>
 
                     <div class="row my-4">
                         <div class="col-lg-12 col-12">
-                            <div class="custom-block bg-white">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</button>
-                                    </li>
-
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
-                                    </li>
-
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification-tab-pane" type="button" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</button>
-                                    </li>
-                                </ul>
-
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                        <h6 class="mb-4">User Profile</h6>
-
-                                        <form class="custom-form profile-form" action="#" method="post" role="form">
-                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Jimmy Aquino">
-
-                                            <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="zhelixion@gmail.com">
-
-                                            <div class="input-group mb-1">
-                                                <img src="images/profile.png" class="profile-image img-fluid" alt="">
-
-                                                <input type="file" class="form-control" id="inputGroupFile02">
-                                            </div>
-
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update
-                                                </button>
-                                            </div>
-                                        </form>
+                            <div class="custom-block custom-block-profile">
+                                <div class="row">
+                                    <div class="col-lg-12 col-12 mb-3">
+                                        <h6>General</h6>
                                     </div>
 
-                                    <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                                        <h6 class="mb-4">Password</h6>
+                                    <div class="col-lg-3 col-12 mb-4 mb-lg-0">
+                                        <div class="custom-block-profile-image-wrap">
+                                            <img src="images/profile.png" class="custom-block-profile-image img-fluid" alt="">
 
-                                        <form class="custom-form password-form" action="#" method="post" role="form">
-                                            <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
-
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
-
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
-
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
+                                            <a href="settings" class="bi-pencil-square custom-block-edit-icon"></a>
+                                        </div>
                                     </div>
 
-                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                        <h6 class="mb-4">Notification</h6>
+                                    <div class="col-lg-9 col-12">
+                                        <p class="d-flex flex-wrap mb-2">
+                                            <strong>Name:</strong>
 
-                                        <form class="custom-form notification-form" action="#" method="post" role="form">
+                                            <span>Matthew Boquiren</span>
+                                        </p>
 
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
+                                        <p class="d-flex flex-wrap mb-2">
+                                            <strong>Email:</strong>
+                                            
+                                            <a href="#">
+                                                zhelixion@gmail.com
+                                            </a>
+                                        </p>
 
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                            </div>
+                                        <p class="d-flex flex-wrap mb-2">
+                                            <strong>Phone:</strong>
 
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
+                                            <a href="#">
+                                                (+63) 9195571501
+                                            </a>
+                                        </p>
 
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                            </div>
+                                        <p class="d-flex flex-wrap mb-2">
+                                            <strong>Birthday:</strong>
 
-                                            <div class="d-flex mt-4">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
+                                            <span>May 12, 2001</span>
+                                        </p>
 
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
+                                        <p class="d-flex flex-wrap">
+                                            <strong>Address:</strong>
+
+                                            <span>Laguna, Philippines</span>
+                                        </p>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="custom-block custom-block-profile bg-white">
+                                <h6 class="mb-4">User Information</h6>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>User ID:</strong>
+
+                                    <span>0987654321</span>
+                                </p>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Date Hired:</strong>
+
+                                    <span>May 12, 2001</span>
+                                </p>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Type of Employee:</strong>
+
+                                    <span>Regular</span>
+                                </p>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Role:</strong>
+
+                                    <span>Project Manager</span>
+                                </p>
+
+                                <p class="d-flex flex-wrap mb-2">
+                                    <strong>Department:</strong>
+
+                                    <span>IT Department</span>
+                                </p>
                             </div>
                         </div>
 
@@ -398,18 +396,18 @@ Bootstrap 5 Dashboard Admin Template
                         </div> -->
                     </div>
 
-                    <!-- <footer class="site-footer">
+                    <footer class="site-footer">
                         <div class="container">
                             <div class="row">
                                 
-                                <div class="col-lg-12 col-12">
+                                <!-- <div class="col-lg-12 col-12">
                                     <p class="copyright-text">Copyright © Mini Finance 2048 
                                     - Design: <a rel="sponsored" href="https://www.tooplate.com" target="_blank">Tooplate</a></p>
-                                </div>
+                                </div> -->
 
                             </div>
                         </div>
-                    </footer> -->
+                    </footer>
                 </main>
 
             </div>

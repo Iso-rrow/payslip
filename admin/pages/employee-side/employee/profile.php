@@ -282,7 +282,7 @@ Bootstrap 5 Dashboard Admin Template
                     </div>
 
                     <div class="row my-4">
-                        <div class="col-lg-7 col-12">
+                        <div class="col-lg-12 col-12">
                             <div class="custom-block custom-block-profile">
                                 <div class="row">
                                     <div class="col-lg-12 col-12 mb-3">

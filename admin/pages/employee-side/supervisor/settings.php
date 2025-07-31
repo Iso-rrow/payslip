@@ -174,8 +174,8 @@ Bootstrap 5 Dashboard Admin Template
                                     <img src="images/profile.png" class="profile-image img-fluid me-3" alt="">
 
                                     <div class="d-flex flex-column">
-                                        <small>Jimmy Aquino</small>
-                                        <a href="#">Fullstack Developer</a>
+                                        <small>Matthew Boquiren</small>
+                                        <a href="#">Project Manager</a>
                                     </div>
                                 </div>
                             </li>
@@ -233,9 +233,16 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
+                                <a class="nav-link" href="request">
                                     <i class="bi bi-send-check-fill"></i>
                                     Request
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="department">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Manage Department
                                 </a>
                             </li>
 
@@ -303,7 +310,7 @@ Bootstrap 5 Dashboard Admin Template
                                         <h6 class="mb-4">User Profile</h6>
 
                                         <form class="custom-form profile-form" action="#" method="post" role="form">
-                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Jimmy Aquino">
+                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Matthew Boquiren">
 
                                             <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="zhelixion@gmail.com">
 

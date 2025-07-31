@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Settings</title>
+        <title>Request</title>
 
         <!-- Favicons -->
         <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
@@ -22,6 +22,8 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <link href="css/bootstrap-icons.css" rel="stylesheet">
+
+        <link href="css/apexcharts.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 <!--
@@ -115,7 +117,7 @@ Bootstrap 5 Dashboard Admin Template
                             <i class="bi-three-dots-vertical"></i>
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-social bg-white shadow">
+                        <!-- <div class="dropdown-menu dropdown-menu-social bg-white shadow">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-4 col-md-4 col-4">
@@ -161,7 +163,7 @@ Bootstrap 5 Dashboard Admin Template
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="dropdown px-3">
@@ -215,7 +217,7 @@ Bootstrap 5 Dashboard Admin Template
 
         <div class="container-fluid">
             <div class="row">
-                <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
+               <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
                             <li class="nav-item">
@@ -233,9 +235,16 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
+                                <a class="nav-link active" href="Request">
                                     <i class="bi bi-send-check-fill"></i>
                                     Request
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="department">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Manage Department
                                 </a>
                             </li>
 
@@ -247,7 +256,7 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" href="settings">
+                                <a class="nav-link" href="settings">
                                     <i class="bi bi-gear-fill"></i>
                                     Settings
                                 </a>
@@ -278,125 +287,152 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Settings</h1>
+                        <h1 class="h2 mb-0"></h1>
                     </div>
 
                     <div class="row my-4">
                         <div class="col-lg-12 col-12">
                             <div class="custom-block bg-white">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</button>
-                                    </li>
+                                <h5 class="mb-4">
+                                    Request
+                                </h5>
+                                <div class="table-responsive">
+                                    <table class="account-table table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Request</th>
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
-                                    </li>
+                                                <th scope="col" class="text-center">Status</th>
+                                                
+                                                <th scope="col" class="text-center">Date</th>
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification-tab-pane" type="button" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</button>
-                                    </li>
-                                </ul>
+                                                <th scope="col" class="text-center">Request to</th>
 
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                        <h6 class="mb-4">User Profile</h6>
+                                            </tr>
+                                        </thead>
 
-                                        <form class="custom-form profile-form" action="#" method="post" role="form">
-                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Jimmy Aquino">
+                                        <tbody>
+                                            <tr>
+                                                <td scope="row">Vacation Leave</td>
 
-                                            <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="zhelixion@gmail.com">
+                                                <!-- <td class="text-danger" scope="row">
+                                                    <span class="me-1">-</span>
+                                                    $100.00
+                                                </td> -->
 
-                                            <div class="input-group mb-1">
-                                                <img src="images/profile.png" class="profile-image img-fluid" alt="">
+                                                <td scope="row" class="text-center">
+                                                    <span class="badge text-bg-success">
+                                                        Approved
+                                                    </span>
+                                                </td>
 
-                                                <input type="file" class="form-control" id="inputGroupFile02">
-                                            </div>
+                                                <td scope="row" class="text-center">July 30, 2025</td>
+                                                
+                                                <td scope="row" class="text-center">Matthew Boquiren</td>
 
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
+                                            </tr>
 
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                           <tr>
+                                                <td scope="row">Vacation Leave</td>
 
-                                    <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                                        <h6 class="mb-4">Password</h6>
+                                                <!-- <td class="text-danger" scope="row">
+                                                    <span class="me-1">-</span>
+                                                    $100.00
+                                                </td> -->
 
-                                        <form class="custom-form password-form" action="#" method="post" role="form">
-                                            <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
+                                                <td scope="row" class="text-center">
+                                                    <span class="badge text-bg-warning">
+                                                        Pending
+                                                    </span>
+                                                </td>
 
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
+                                                <td scope="row" class="text-center">August 4, 2025</td>
 
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
+                                                <td scope="row" class="text-center">Matthew Boquiren</td>
 
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
+                                            </tr>
 
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                             <tr>
+                                                <td scope="row">Vacation Leave</td>
 
-                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                        <h6 class="mb-4">Notification</h6>
+                                                <!-- <td class="text-danger" scope="row">
+                                                    <span class="me-1">-</span>
+                                                    $100.00
+                                                </td> -->
 
-                                        <form class="custom-form notification-form" action="#" method="post" role="form">
+                                                <td scope="row" class="text-center">
+                                                    <span class="badge text-bg-danger">
+                                                        Declined
+                                                    </span>
+                                                </td>
 
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
+                                                <td scope="row" class="text-center">August 12, 2025</td>
+                                                
+                                                <td scope="row" class="text-center">Matthew Boquiren</td>
 
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                            </div>
+                                            </tr>
 
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
+                                            <tr>
+                                                <td scope="row">Sick Leave</td>
 
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                            </div>
 
-                                            <div class="d-flex mt-4">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
+                                                <!-- <td class="text-danger" scope="row">
+                                                    <span class="me-1">-</span>
+                                                    $100.00
+                                                </td> -->
 
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                                <td scope="row" class="text-center">
+                                                    <span class="badge text-bg-success">
+                                                        Approved
+                                                    </span>
+                                                </td>
+
+                                                <td scope="row" class="text-center">July 21, 2025</td>
+
+                                                <td scope="row" class="text-center">Matthew Boquiren</td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
+
+                                <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center mb-0">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">Prev</span>
+                                                </a>
+                                            </li>
+
+                                            <li class="page-item active" aria-current="page">
+                                                <a class="page-link" href="#">1</a>
+                                            </li>
+                                            
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">2</a>
+                                            </li>
+                                            
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">3</a>
+                                            </li>
+
+                                            <li class="page-item">
+                                                <a class="page-link" href="#">4</a>
+                                            </li>
+                                            
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">Next</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>  
                             </div>
                         </div>
+                            
+                        
 
-                        <!-- <div class="col-lg-5 col-12">
-                            <div class="custom-block custom-block-contact">
-                                <h6 class="mb-4">Still can’t find what you looking for?</h6>
-
-                                <p>
-                                    <strong>Call us:</strong>
-                                    <a href="tel: 305-240-9671" class="ms-2">
-                                        (60) 
-                                        305-240-9671
-                                    </a>
-                                </p>
-
-                                <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
-                                    Chat with us
-                                </a>
-                            </div>
-                        </div> -->
-                    </div>
+                        
 
                     <!-- <footer class="site-footer">
                         <div class="container">
@@ -418,7 +454,7 @@ Bootstrap 5 Dashboard Admin Template
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/apexcharts.min.js"></script>
         <script src="js/custom.js"></script>
-
     </body>
 </html>

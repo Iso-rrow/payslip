@@ -26,10 +26,19 @@
         <link href="css/apexcharts.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
+<!--
+
+Tooplate 2135 Mini Finance
+
+https://www.tooplate.com/view/2135-mini-finance
+
+Bootstrap 5 Dashboard Admin Template
+
+-->
 
     </head>
     
-    <body onload="startTime()">
+    <body>
         
         <header class="navbar sticky-top flex-md-nowrap">
             <div class="col-md-3 col-lg-3 me-0 px-3 fs-6">
@@ -107,10 +116,7 @@
 
                     <div class="dropdown ps-1">
                         <a class="nav-link dropdown-toggle text-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi-three-dots-vertical">
-                                
-                            </i>
-                            
+                            <i class="bi-three-dots-vertical"></i>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-social bg-white shadow">
@@ -172,8 +178,8 @@
                                     <img src="images/profile.png" class="profile-image img-fluid me-3" alt="">
 
                                     <div class="d-flex flex-column">
-                                        <small>Jimmy Aquino</small>
-                                        <a href="#">Fullstack Developer</a>
+                                        <small>Matthew Boquiren</small>
+                                        <a href="#">Project Manager</a>
                                     </div>
                                 </div>
                             </li>
@@ -214,7 +220,7 @@
         <div class="container-fluid">
             <div class="row">
                 <nav id="sidebarMenu" class="col-md-3 col-lg-3 d-md-block sidebar collapse">
-                    <div class="position-sticky py-3 px-3 sidebar-sticky">
+                    <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="index">
@@ -231,9 +237,16 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
+                                <a class="nav-link" href="request">
                                     <i class="bi bi-send-check-fill"></i>
                                     Request
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="department">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Manage Department
                                 </a>
                             </li>
 
@@ -276,7 +289,7 @@
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Hello, Jimmy Aquino</h1>
+                        <h1 class="h2 mb-0">Hello, Matthew Boquiren</h1>
 
                         <small class="text-muted">Welcome back!</small>
                     </div>
@@ -320,6 +333,7 @@
                                 <h5>Work Hours Accumulated</h5>
                                 <div id="chart"></div>
                             </div>
+
                             <!-- <div class="custom-block custom-block-exchange"> -->
                                 <!-- <h5 class="mb-4">Exchange Rate</h5> -->
 
@@ -446,7 +460,7 @@
                                 <p class="d-flex flex-wrap mb-2">
                                     <strong>Name:</strong>
 
-                                    <span>Jimmy Aquino</span>
+                                    <span>Matthew Boquiren</span>
                                 </p>
 
                                 <p class="d-flex flex-wrap mb-2">
@@ -461,7 +475,7 @@
                                     <strong>Phone:</strong>
 
                                     <a href="#">
-                                        (+63) 9123219210
+                                        (+63) 9195571501
                                     </a>
                                 </p>
                             </div> -->
@@ -613,11 +627,10 @@
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
         <script src="js/apexcharts.min.js"></script>
-        <script src="js/custom.js"></script>
         <script src="js/clock.js"></script>
-        <script src="js/attendance.js"></script>
+        <script src="js/custom.js"></script>
         <script src="js/hours.js"></script>
         <script src="js/date.js"></script>
-
+        <script src="js/attendance.js"></script>
     </body>
 </html>

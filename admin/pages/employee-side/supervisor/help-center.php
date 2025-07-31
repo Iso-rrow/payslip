@@ -7,7 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Settings</title>
+        <title>Help Center</title>
 
         <!-- Favicons -->
         <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
@@ -117,7 +117,7 @@ Bootstrap 5 Dashboard Admin Template
 
                         <div class="dropdown-menu dropdown-menu-social bg-white shadow">
                             <div class="container">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-lg-4 col-md-4 col-4">
                                         <a class="dropdown-item text-center" href="#">
                                             <img src="images/social/search.png" class="profile-image img-fluid" alt="">
@@ -159,7 +159,7 @@ Bootstrap 5 Dashboard Admin Template
                                             <span class="d-block">Youtube</span>
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -174,8 +174,8 @@ Bootstrap 5 Dashboard Admin Template
                                     <img src="images/profile.png" class="profile-image img-fluid me-3" alt="">
 
                                     <div class="d-flex flex-column">
-                                        <small>Jimmy Aquino</small>
-                                        <a href="#">Fullstack Developer</a>
+                                        <small>Matthew Boquiren</small>
+                                        <a href="#">Project Manager</a>
                                     </div>
                                 </div>
                             </li>
@@ -233,9 +233,16 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
+                                <a class="nav-link" href="request">
                                     <i class="bi bi-send-check-fill"></i>
                                     Request
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="department">
+                                    <i class="bi bi-kanban-fill"></i>
+                                    Manage Department
                                 </a>
                             </li>
 
@@ -247,14 +254,14 @@ Bootstrap 5 Dashboard Admin Template
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" href="settings">
+                                <a class="nav-link" href="settings">
                                     <i class="bi bi-gear-fill"></i>
                                     Settings
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="help-center">
+                                <a class="nav-link active" href="help-center">
                                     <i class="bi bi-question-circle-fill"></i>
                                     Help Center
                                 </a>
@@ -276,110 +283,55 @@ Bootstrap 5 Dashboard Admin Template
                     </div>
                 </nav>
 
-                <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
+                <!-- <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Settings</h1>
+                        <h1 class="h2 mb-0">How can we help?</h1>
                     </div>
 
                     <div class="row my-4">
-                        <div class="col-lg-12 col-12">
+                        <div class="col-lg-7 col-12">
                             <div class="custom-block bg-white">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</button>
-                                    </li>
+                                <form class="custom-form search-form" action="#" method="post" role="form">
+                                    <div class="row">
+                                        <div class="col-lg-12 mb-2">
+                                            <h6>Search for the topics</h6>
+                                        </div>
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
-                                    </li>
+                                        <div class="col-lg-8 col-md-8 col-12">
+                                            <input class="form-control mb-lg-0 mb-md-0" name="search" type="text" placeholder="Search" aria-label="Search">
+                                        </div>
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification-tab-pane" type="button" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</button>
-                                    </li>
-                                </ul>
-
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                        <h6 class="mb-4">User Profile</h6>
-
-                                        <form class="custom-form profile-form" action="#" method="post" role="form">
-                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Jimmy Aquino">
-
-                                            <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="zhelixion@gmail.com">
-
-                                            <div class="input-group mb-1">
-                                                <img src="images/profile.png" class="profile-image img-fluid" alt="">
-
-                                                <input type="file" class="form-control" id="inputGroupFile02">
-                                            </div>
-
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update
-                                                </button>
-                                            </div>
-                                        </form>
+                                        <div class="col-lg-4 col-md-4 col-12">
+                                            <button type="submit" class="form-control">
+                                                Submit
+                                            </button>
+                                        </div>
                                     </div>
+                                </form>
+                            </div>
 
-                                    <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                                        <h6 class="mb-4">Password</h6>
+                            <div class="custom-block custom-block-faq">
+                                <h5 class="mb-4">Frequently Asked Questions</h5>
 
-                                        <form class="custom-form password-form" action="#" method="post" role="form">
-                                            <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
+                                <strong class="d-block mb-2">What is Mini Finance Template?</strong>
 
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
+                                <p>Mini Finance Template includes total 6 HTML pages for your customizations. It is free of charge provided by Tooplate website.</p>
+                                
+                                <strong class="d-block mt-3 mb-2">What is Free HTML Template?</strong>
 
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
+                                <p>Free HTML Template is a ready-made web page based on HTML CSS codes.</p>
 
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
+                                <strong class="d-block mt-3 mb-2">What is the best code editor?</strong>
 
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
+                                <p>Popular code editors are Dreamweaver, Notepad++, Visual Studio Code, Rapid CSS, Sublime Text and Atom to edit HTML CSS JS codes and put in your own web contents.</p>
 
-                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                        <h6 class="mb-4">Notification</h6>
+                                 <strong class="d-block mt-3 mb-2">Are all templates free to download?</strong>
 
-                                        <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                            </div>
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                            </div>
-
-                                            <div class="d-flex mt-4">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
+                                 <p>Yes, all CSS templates are 100% free to download and use for your websites. You can also use them for learning HTML, CSS, and JavaScripts.</p>
                             </div>
                         </div>
 
-                        <!-- <div class="col-lg-5 col-12">
+                        <div class="col-lg-5 col-12">
                             <div class="custom-block custom-block-contact">
                                 <h6 class="mb-4">Still can’t find what you looking for?</h6>
 
@@ -395,10 +347,10 @@ Bootstrap 5 Dashboard Admin Template
                                     Chat with us
                                 </a>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
 
-                    <!-- <footer class="site-footer">
+                    <footer class="site-footer">
                         <div class="container">
                             <div class="row">
                                 
@@ -409,8 +361,8 @@ Bootstrap 5 Dashboard Admin Template
 
                             </div>
                         </div>
-                    </footer> -->
-                </main>
+                    </footer>
+                </main> -->
 
             </div>
         </div>

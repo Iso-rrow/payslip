@@ -7,10 +7,7 @@
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Settings</title>
-
-        <!-- Favicons -->
-        <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+        <title>Mini Finance - Transaction Detail</title>
 
         <!-- CSS FILES -->      
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,6 +19,8 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
 
         <link href="css/bootstrap-icons.css" rel="stylesheet">
+
+        <link href="css/apexcharts.css" rel="stylesheet">
 
         <link href="css/tooplate-mini-finance.css" rel="stylesheet">
 <!--
@@ -75,7 +74,7 @@ Bootstrap 5 Dashboard Admin Template
                                     <div>
                                         <span>Your account has been created successfuly.</span>
 
-                                        <p>12 days ago</p>
+                                        <p>2 days ago</p>
                                     </div>
                                 </a>
                             </li>
@@ -87,7 +86,7 @@ Bootstrap 5 Dashboard Admin Template
                                     </div>
 
                                     <div>
-                                        <span>Please check. We have sent a Daily report.</span>
+                                        <span>Please check. We have sent Daily report.</span>
 
                                         <p>10 days ago</p>
                                     </div>
@@ -117,7 +116,7 @@ Bootstrap 5 Dashboard Admin Template
 
                         <div class="dropdown-menu dropdown-menu-social bg-white shadow">
                             <div class="container">
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-lg-4 col-md-4 col-4">
                                         <a class="dropdown-item text-center" href="#">
                                             <img src="images/social/search.png" class="profile-image img-fluid" alt="">
@@ -159,7 +158,7 @@ Bootstrap 5 Dashboard Admin Template
                                             <span class="d-block">Youtube</span>
                                         </a>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -174,8 +173,8 @@ Bootstrap 5 Dashboard Admin Template
                                     <img src="images/profile.png" class="profile-image img-fluid me-3" alt="">
 
                                     <div class="d-flex flex-column">
-                                        <small>Jimmy Aquino</small>
-                                        <a href="#">Fullstack Developer</a>
+                                        <small>Thomas</small>
+                                        <a href="#">thomas@site.com</a>
                                     </div>
                                 </div>
                             </li>
@@ -219,55 +218,48 @@ Bootstrap 5 Dashboard Admin Template
                     <div class="position-sticky py-4 px-3 sidebar-sticky">
                         <ul class="nav flex-column h-100">
                             <li class="nav-item">
-                                <a class="nav-link" aria-current="page" href="index">
-                                    <i class="bi bi-bar-chart-line-fill"></i>
-                                    Dashboard
+                                <a class="nav-link" aria-current="page" href="index.html">
+                                    <i class="bi-house-fill me-2"></i>
+                                    Overview
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="attendance">
-                                    <i class="bi bi-clock-fill"></i>
-                                    Attendance
+                                <a class="nav-link" href="wallet.html">
+                                    <i class="bi-wallet me-2"></i>
+                                    My Wallet
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="department">
-                                    <i class="bi bi-send-check-fill"></i>
-                                    Request
-                                </a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link" href="profile">
-                                    <i class="bi bi-person-fill"></i>
+                                <a class="nav-link" href="profile.html">
+                                    <i class="bi-person me-2"></i>
                                     Profile
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" href="settings">
-                                    <i class="bi bi-gear-fill"></i>
+                                <a class="nav-link" href="setting.html">
+                                    <i class="bi-gear me-2"></i>
                                     Settings
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="help-center">
-                                    <i class="bi bi-question-circle-fill"></i>
+                                <a class="nav-link" href="help-center.html">
+                                    <i class="bi-question-circle me-2"></i>
                                     Help Center
                                 </a>
                             </li>
 
-                            <!-- <li class="nav-item featured-box mt-lg-5 mt-4 mb-4">
+                            <li class="nav-item featured-box mt-lg-5 mt-4 mb-4">
                                 <img src="images/credit-card.png" class="img-fluid" alt="">
 
                                 <a class="btn custom-btn" href="#">Upgrade</a>
-                            </li> -->
+                            </li>
 
                             <li class="nav-item border-top mt-auto pt-2">
-                                <a class="nav-link" href="/payslip/authentication/logout">
+                                <a class="nav-link" href="#">
                                     <i class="bi-box-arrow-left me-2"></i>
                                     Logout
                                 </a>
@@ -278,127 +270,60 @@ Bootstrap 5 Dashboard Admin Template
 
                 <main class="main-wrapper col-md-9 ms-sm-auto py-4 col-lg-9 px-md-4 border-start">
                     <div class="title-group mb-3">
-                        <h1 class="h2 mb-0">Settings</h1>
+                        <h1 class="h2 mb-0">Transations Detail</h1>
                     </div>
 
                     <div class="row my-4">
                         <div class="col-lg-12 col-12">
-                            <div class="custom-block bg-white">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">Profile</button>
-                                    </li>
+                            <div class="custom-block custom-block-transation-detail bg-white">
+                                <div class="d-flex flex-wrap align-items-center border-bottom pb-3 mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <img src="images/profile/young-woman-with-round-glasses-yellow-sweater.jpg" class="profile-image img-fluid" alt="">
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="password-tab" data-bs-toggle="tab" data-bs-target="#password-tab-pane" type="button" role="tab" aria-controls="password-tab-pane" aria-selected="false">Password</button>
-                                    </li>
+                                        <div>
+                                            <p>Store</p>
 
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="notification-tab" data-bs-toggle="tab" data-bs-target="#notification-tab-pane" type="button" role="tab" aria-controls="notification-tab-pane" aria-selected="false">Notification</button>
-                                    </li>
-                                </ul>
-
-                                <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade show active" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-                                        <h6 class="mb-4">User Profile</h6>
-
-                                        <form class="custom-form profile-form" action="#" method="post" role="form">
-                                            <input class="form-control" type="text" name="profile-name" id="profile-name" placeholder="Jimmy Aquino">
-
-                                            <input class="form-control" type="email" name="profile-email" id="profile-email" placeholder="zhelixion@gmail.com">
-
-                                            <div class="input-group mb-1">
-                                                <img src="images/profile.png" class="profile-image img-fluid" alt="">
-
-                                                <input type="file" class="form-control" id="inputGroupFile02">
-                                            </div>
-
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update
-                                                </button>
-                                            </div>
-                                        </form>
+                                            <small class="text-muted">Payment Received</small>
+                                        </div>
                                     </div>
 
-                                    <div class="tab-pane fade" id="password-tab-pane" role="tabpanel" aria-labelledby="password-tab" tabindex="0">
-                                        <h6 class="mb-4">Password</h6>
-
-                                        <form class="custom-form password-form" action="#" method="post" role="form">
-                                            <input type="password" name="password" id="password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Current Password" required="">
-
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="New Password" required="">
-
-                                            <input type="password" name="confirm_password" id="confirm_password" pattern="[0-9a-zA-Z]{4,10}" class="form-control" placeholder="Confirm Password" required="">
-
-                                            <div class="d-flex">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel" aria-labelledby="notification-tab" tabindex="0">
-                                        <h6 class="mb-4">Notification</h6>
-
-                                        <form class="custom-form notification-form" action="#" method="post" role="form">
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedOne">Account activity</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedOne" checked>
-                                            </div>
-
-                                            <div class="form-check form-switch d-flex mb-3 ps-0">
-                                                <label class="form-check-label" for="flexSwitchCheckCheckedTwo">Payment updated</label>
-
-                                                <input class="form-check-input ms-auto" type="checkbox" name="form-check-input" role="switch" id="flexSwitchCheckCheckedTwo" checked>
-                                            </div>
-
-                                            <div class="d-flex mt-4">
-                                                <button type="button" class="form-control me-3">
-                                                    Reset
-                                                </button>
-
-                                                <button type="submit" class="form-control ms-2">
-                                                    Update Password
-                                                </button>
-                                            </div>
-                                        </form>
+                                    <div class="ms-auto">
+                                        <small>22/8/2023</small>
+                                        <strong class="d-block text-success"><span class="me-1">+</span> $280</strong>
                                     </div>
                                 </div>
+
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <div class="custom-block-transation-detail-item mt-4">
+                                        <h6>Transation ID</h6>
+
+                                        <p>283J3S0EL023</p>
+                                    </div>
+
+                                    <div class="custom-block-transation-detail-item mt-4 mx-auto px-4">
+                                        <h6>Description</h6>
+
+                                        <p>Shopee</p>
+                                    </div>
+
+                                    <div class="custom-block-transation-detail-item mt-4 ms-lg-auto px-lg-3 px-md-3">
+                                        <h6>Payment Type</h6>
+
+                                        <p>C2C Transfer</p>
+                                    </div>
+
+                                    <div class="custom-block-transation-detail-item mt-4 ms-auto me-auto">
+                                        <h6>Amounts</h6>
+
+                                        <p>$280</p>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
-
-                        <!-- <div class="col-lg-5 col-12">
-                            <div class="custom-block custom-block-contact">
-                                <h6 class="mb-4">Still can’t find what you looking for?</h6>
-
-                                <p>
-                                    <strong>Call us:</strong>
-                                    <a href="tel: 305-240-9671" class="ms-2">
-                                        (60) 
-                                        305-240-9671
-                                    </a>
-                                </p>
-
-                                <a href="#" class="btn custom-btn custom-btn-bg-white mt-3">
-                                    Chat with us
-                                </a>
-                            </div>
-                        </div> -->
                     </div>
 
-                    <!-- <footer class="site-footer">
+                    <footer class="site-footer">
                         <div class="container">
                             <div class="row">
                                 
@@ -409,7 +334,7 @@ Bootstrap 5 Dashboard Admin Template
 
                             </div>
                         </div>
-                    </footer> -->
+                    </footer>
                 </main>
 
             </div>
@@ -418,6 +343,7 @@ Bootstrap 5 Dashboard Admin Template
         <!-- JAVASCRIPT FILES -->
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/apexcharts.min.js"></script>
         <script src="js/custom.js"></script>
 
     </body>
