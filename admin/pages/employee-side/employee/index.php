@@ -1,4 +1,4 @@
-<!doctype html>
+   <!doctype html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -69,7 +69,7 @@
 
                                     <div>
                                         <span>Your account has been created successfuly.</span>
-
+                        
                                         <p>12 days ago</p>
                                     </div>
                                 </a>

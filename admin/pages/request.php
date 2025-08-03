@@ -127,7 +127,7 @@ include __DIR__ . '/../../database/connect.php';
                             <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">
                                 <input type="hidden" name="action" value="approve">
-                                <button type="submit" class="btn btn-sm btn-primary">Final Approve</button>
+                                <button type="submit" class="btn btn-sm btn-primary">Final Conformation</button>
                             </form>
                             <form action="admin/pages/approve_request.php" method="POST" class="d-inline">
                                 <input type="hidden" name="request_id" value="<?= $row['id'] ?>">

@@ -27,8 +27,14 @@ if (!$schedData) {
     exit;
 }
 
-$scheduledTimeIn = new DateTime($schedData['scheduled_time_in']);
-$scheduledTimeOut = new DateTime($schedData['scheduled_time_out']);
+date_default_timezone_set('Asia/Manila');
+
+$scheduledTimeIn = DateTime::createFromFormat('H:i:s', $schedData['scheduled_time_in'], new DateTimeZone('Asia/Manila'));
+$scheduledTimeIn->setDate(date('Y'), date('m'), date('d'));
+
+$scheduledTimeOut = DateTime::createFromFormat('H:i:s', $schedData['scheduled_time_out'], new DateTimeZone('Asia/Manila'));
+$scheduledTimeOut->setDate(date('Y'), date('m'), date('d'));
+
 $salaryRate = $schedData['salary_rate'];
 $employeeName = $schedData['first_name'] . ' ' . $schedData['last_name'];
 $currentDate = (new DateTime())->format('Y-m-d');
@@ -47,19 +53,20 @@ if ($action === 'in') {
     
     
     // Evaluate lateness
-    $now = new DateTime();
+    $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
     $diffMinutes = ($now->getTimestamp() - $scheduledTimeIn->getTimestamp()) / 60;
     $lateStatus = 'On Time';
     $lateMinutes = 0;
     $deduction = 0;
-    
-    if ($diffMinutes > 5) {
+
+    if ($diffMinutes < -1) {
+        $lateStatus = 'Early In';
+    } elseif ($diffMinutes >= 5) {
         $lateStatus = 'Late';
         $lateMinutes = round($diffMinutes);
         $deduction = round(($lateMinutes / 60) * $salaryRate, 2);
-    } elseif ($diffMinutes < 0) {
-        $lateStatus = 'Early In';
     }
+
 
     $insert = $conn->prepare("
         INSERT INTO attendance 
@@ -90,7 +97,7 @@ if ($action === 'out') {
         exit;
     }
 
-    $now = new DateTime();
+    $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
     $underTimeStatus = '';
     $underTimeDeduction = 0;
     $minutesUnder = 0;

@@ -1,22 +1,26 @@
 <?php
 session_start();
 
-// Fallback values
 $emp_name = $_SESSION['user_name'] ?? 'Unknown User';
 $emp_dept = 'Human Resource';
 $emp_img  = 'profile.png';
 
 if (isset($_SESSION['employee_id'])) {
-    include __DIR__ . '/../../database/connect.php'; // This fixes the path
+    include __DIR__ . '/../../database/connect.php'; 
 
     if (isset($conn)) {
-        $stmt = $conn->prepare("SELECT img_name, department FROM employees WHERE employee_id = ?");
+        $stmt = $conn->prepare("SELECT img_name, department, first_name, last_name FROM employees WHERE employee_id = ?");
         $stmt->bind_param("i", $_SESSION['employee_id']);
         $stmt->execute();
         $result = $stmt->get_result();
+
         if ($result && $row = $result->fetch_assoc()) {
             $emp_img = $row['img_name'] ?? $emp_img;
             $emp_dept = $row['department'] ?? $emp_dept;
+
+            $first_name = $row['first_name'] ?? '';
+            $last_name = $row['last_name'] ?? '';
+            $emp_name = trim($first_name . ' ' . $last_name);
         }
     } else {
         error_log("Database connection is not set.");
@@ -75,7 +79,7 @@ if (isset($conn)) {
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
-									<span class="menu-title">Dashboard</span>
+									<span class="menu-title">Time In</span>
 								</a>
 								<!--end:Menu link-->
 							</div>
@@ -87,7 +91,7 @@ if (isset($conn)) {
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
-									<span class="menu-title">Time In</span>
+									<span class="menu-title">Dashboard</span>
 								</a>
 								<!--end:Menu link-->
 							</div>
@@ -279,7 +283,7 @@ if (isset($conn)) {
 					<!-- begin: Reports Management -->
 					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 						<!--begin:Menu link-->
-						<span class="menu-link">
+						<!-- <span class="menu-link">
 							<span class="menu-icon">
 								<i class="ki-duotone ki-information-3 fs-1">
 									<span class="path1"></span>
@@ -289,18 +293,18 @@ if (isset($conn)) {
 							</span>
 							<span class="menu-title">Reports</span>
 							<span class="menu-arrow"></span>
-						</span>
+						</span> -->
 						<!--end:Menu link-->
 						<!--begin: Departments-->
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
 								<!--begin:All Employees-->
-								<a class="menu-link" href="#">
+								<!-- <a class="menu-link" href="#">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
 									<span class="menu-title">All</span>
-								</a>
+								</a> -->
 								<!--end:All Employees-->
 							</div>
 						</div>
@@ -310,7 +314,7 @@ if (isset($conn)) {
 					 <!-- begin: ApplicationManagement -->
 					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 						<!--begin:Menu link-->
-						<span class="menu-link">
+						<!-- <span class="menu-link">
 							<span class="menu-icon">
 								<i class="ki-duotone ki-file-added fs-1">
 									<span class="path1"></span>
@@ -319,18 +323,18 @@ if (isset($conn)) {
 							</span>
 							<span class="menu-title">Applications</span>
 							<span class="menu-arrow"></span>
-						</span>
+						</span> -->
 						<!--end:Menu link-->
 						<!--begin: Departments-->
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
 								<!--begin:All Employees-->
-								<a class="menu-link" href="#">
+								<!-- <a class="menu-link" href="#">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
 									<span class="menu-title">All</span>
-								</a>
+								</a> -->
 								<!--end:All Employees-->
 							</div>
 						</div>
@@ -348,7 +352,7 @@ if (isset($conn)) {
 					<!-- begin: User Management -->
 					<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
 						<!--begin:Menu link-->
-						<span class="menu-link">
+						<!-- <span class="menu-link">
 							<span class="menu-icon">
 								<i class="ki-duotone ki-profile-user fs-1">
 									<span class="path1"></span>
@@ -359,18 +363,18 @@ if (isset($conn)) {
 							</span>
 							<span class="menu-title">Account Management</span>
 							<span class="menu-arrow"></span>
-						</span>
+						</span> -->
 						<!--end:Menu link-->
 						<!--begin: Departments-->
 						<div class="menu-sub menu-sub-accordion">
 							<div class="menu-item">
 								<!--begin:All Employees-->
-								<a class="menu-link" href="admin?pages=user">
+								<!-- <a class="menu-link" href="admin?pages=user">
 									<span class="menu-bullet">
 										<span class="bullet bullet-dot"></span>
 									</span>
 									<span class="menu-title">All</span>
-								</a>
+								</a> -->
 								<!--end:All Employees-->
 							</div>
 						</div>

@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Normalize time
     $scheduled_time_in = !empty($data['scheduled_time_in']) ? date('H:i:s', strtotime($data['scheduled_time_in'])) : null;
     $scheduled_time_out = !empty($data['scheduled_time_out']) ? date('H:i:s', strtotime($data['scheduled_time_out'])) : null;
+    $hire_date = isset($data['hire_date']) ? date('Y-m-d', strtotime($data['hire_date'])) : null;
+
+
 
     // Prepare UPDATE query
     $query = "UPDATE employees SET 

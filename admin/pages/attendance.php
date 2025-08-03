@@ -118,9 +118,9 @@ while ($row = $result->fetch_assoc()) {
                                 <td><?= $row['remarks'] ?? '—' ?></td>
                                 <td><?= date('F d, Y', strtotime($row['date'])) ?></td>
                                 <td>
-                                    <button class="btn btn-sm btn-info payslip-btn"
+                                    <!-- <button class="btn btn-sm btn-info payslip-btn"
                                             data-id="<?= $row['id'] ?>"
-                                            data-employee="<?= $row['employee_id'] ?>">Payslip</button>
+                                            data-employee="<?= $row['employee_id'] ?>">Payslip</button> -->
                                     <button class="btn btn-sm btn-primary edit-btn" data-id="<?= $row['id'] ?>">Edit</button>
                                     <button class="btn btn-sm btn-danger delete-btn" data-id="<?= $row['id'] ?>">Delete</button>
                                 </td>
