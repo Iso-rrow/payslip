@@ -344,12 +344,12 @@ if ($result && $result->num_rows > 0) {
                         <?php
                         $selectedDepartment = $_GET['department'] ?? 'All Departments';
                         $imagePath = '../../uploads/employees/';
-                        $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'default.jpg';
+                        $imgFile = !empty($employee['img_name']) ? $employee['img_name'] : 'profile.png';
                         $imgFullPath = $_SERVER['DOCUMENT_ROOT'] . $imagePath . $imgFile;
 
                         // Fallback if file not found
                         if (!file_exists($imgFullPath)) {
-                            $imgFile = 'default.jpg';
+                            $imgFile = 'profile.png';
                         }
                         ?>
                         <div class="symbol symbol-25px me-2">
@@ -400,7 +400,7 @@ if ($result && $result->num_rows > 0) {
 
                     <!-- Profile Image -->
                     <div class="text-center mb-4">
-                        <img id="edit_employee_img" src="/payslip/uploads/employees/default.jpg"
+                        <img id="edit_employee_img" src="/payslip/uploads/employees/profile.png"
                             class="rounded-circle border" style="width: 130px; height: 130px; object-fit: cover;"
                             alt="Employee Image">
 
